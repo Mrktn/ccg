@@ -31,7 +31,7 @@ static void printHelp()
     puts("    --max-function-parameters\t\tMax number of parameters for a function (default 4)");
     puts("    --max-statements-per-block\t\tMax number of statements in each block (default 7)");
     puts("    --max-expression-nesting\t\tControl the complexity of the expressions (default 8)");
-    puts("    --max-block-nesting\t\tControl the nesting of the blocks (default 7)");
+    puts("    --max-block-nesting\t\t\tControl the nesting of the blocks (default 7)");
     exit(EXIT_SUCCESS);
 }
 
