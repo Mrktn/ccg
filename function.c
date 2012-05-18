@@ -1,4 +1,4 @@
-/*	C Code Generator
+/*  C Code Generator
  *
  *  Copyright (c) 2012, Antoine Balestrat, merkil@savhon.org
  *

@@ -16,11 +16,6 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* Qualifiers */
-#define Q_CONST		(1 << 0)
-#define Q_REGISTER	(1 << 1)
-#define Q_VOLATILE	(1 << 2)
-
 #define P_WRITEABLE (1 << 0)
 
 typedef int bool;
@@ -71,7 +66,7 @@ typedef struct
 
 typedef struct
 {
-    void *condition; /* It is in fact an Expression. */
+    void *condition; /* Expression *condition */
 
     struct BLCK
     {
@@ -206,13 +201,6 @@ typedef struct EL
 	Expression *expression;
 	struct EL *next;
 } ExpressionList;
-
-/*
-typedef struct TestExpression TestExpression;
-typedef struct TernaryExpression TernaryExpression;
-typedef struct OperationExpression OperationExpression;
-typedef struct AssignmentExpression AssignmentExpression;
-*/
 
 typedef struct
 {
