@@ -32,11 +32,13 @@ static void printHelp()
     puts("    --max-statements-per-block\t\tMax number of statements in each block (default 7)");
     puts("    --max-expression-nesting\t\tControl the complexity of the expressions (default 8)");
     puts("    --max-block-nesting\t\tControl the nesting of the blocks (default 7)");
+    exit(EXIT_SUCCESS);
 }
 
 static void printVersion()
 {
     puts("This is ccg version " CCG_VERSION);
+    exit(EXIT_SUCCESS);
 }
 
 static void setopt(int index)
