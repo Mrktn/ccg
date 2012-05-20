@@ -28,6 +28,9 @@ typedef enum {_if, _for, _functioncall, _return, _assignment, _statementtypemax}
 typedef enum {_variable, _constant, _operandtypemax, _none = 42} OperandType;
 typedef enum {_equal, _lowerorequal, _greaterorequal, _lower, greater, _different, _testopmax} TestOp;
 typedef enum {_plus, _minus, _div, _mul, _arithopmax} ArithOp;
+typedef enum {_bwand, _bwor, _xor, _bitwiseopmax} BitwiseOp;
+typedef enum {_logand, _logor, _logicalopmax} LogicalOp;
+typedef enum {_arithmetic, _bitwise, _logical, _operationtypemax} OperationType;
 typedef enum {_operandexpr, _ternaryexpr, _operationexpr, _testexpr, _assignmentexpr, _functioncallexpr, _expressiontypemax} ExpressionType;
 typedef enum {_assigninc, _assigndec_, _assigndiv, _assignmul, _assign, _assignopmax} AssignmentOp;
 
@@ -176,7 +179,14 @@ typedef struct Expr
 		struct OperationExpression
 		{
 			struct Expr *lefthand, *righthand;
-			ArithOp op;
+			OperationType type;
+
+			union
+			{
+				ArithOp arithop;
+				BitwiseOp bitwiseop;
+				LogicalOp logicalop;
+			} operator;
 		} *opexpr;
 
 		struct AssignmentExpression

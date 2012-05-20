@@ -30,6 +30,8 @@ static const ExpressionType exprarray[10] = {_ternaryexpr, _functioncallexpr, _o
 
 const char *testop2str[_testopmax] = {"==", "<=", ">=", "<", ">", "!="};
 const char *arithop2str[_arithopmax] = {"+", "-", "/", "*"};
+const char *bitwiseop2str[_bitwiseopmax] = {"&", "|", "^"};
+const char *logicalop2str[_logicalopmax] = {"&&", "||"};
 const char *assignop2str[_assignopmax] = {"+=", "-=", "/=", "*=", "="};
 
 void buildOperand(Expression*, VariableList*, unsigned);
@@ -129,7 +131,14 @@ void buildOperation(Expression *expression, VariableList *scope, unsigned nestin
 	struct OperationExpression *oe = xmalloc(sizeof(*oe));
 
 	oe->lefthand = makeRandomExpression(scope, nesting + 1), oe->righthand = makeRandomExpression(scope, nesting + 1);
-	oe->op = rand() % _arithopmax;
+	oe->type = rand() % _operationtypemax;
+
+	if(oe->type == _arithmetic)
+		oe->operator.arithop = rand() % _arithopmax;
+	else if(oe->type == _bitwise)
+		oe->operator.bitwiseop = rand() % _bitwiseopmax;
+	else
+		oe->operator.logicalop = rand() % _logicalopmax;
 
 	expression->expr.opexpr = oe;
 }
@@ -152,69 +161,69 @@ void buildAssignment(Expression *expression, VariableList *scope, unsigned nesti
 void buildFunctionCall(Expression *expression, VariableList *scope, unsigned nesting)
 {
 	struct FunctionCallExpression *fce = xmalloc(sizeof(*fce));
-	fce->paramlist = NULL;
 	VariableList *v;
 
+	fce->paramlist = NULL;
 	fce->function = makeRandomFunction(true);
 
 	foreach_variable(v, fce->function->paramlist)
-	{
 		addExpressionToList(makeRandomExpression(scope, nesting + 1), (ExpressionList**) &fce->paramlist);
-	}
 
 	expression->expr.funccallexpr = fce;
 }
 
-static void printOperand(Operand *operand)
+static void printOperand(Operand *op)
 {
-	if(operand->type == _variable)
-		fputs(operand->op.variable->name, stdout);
-	else if(operand->type == _constant)
-		printConstant(&operand->op.constant);
+	if(op->type == _variable)
+		fputs(op->op.variable->name, stdout);
 	else
-		die("unreachable.");
+		printConstant(&op->op.constant);
 }
 
-void printTest(struct TestExpression *testexpression)
-{
-	printExpression(testexpression->lefthand);
-	printf(" %s ", testop2str[testexpression->op]);
-	printExpression(testexpression->righthand);
-}
-
-static void printTernary(struct TernaryExpression *ternaryexpression)
+void printTest(struct TestExpression *te)
 {
 	putchar('(');
-	printExpression(ternaryexpression->test);
+	printExpression(te->lefthand);
+	printf(" %s ", testop2str[te->op]);
+	printExpression(te->righthand);
+	putchar(')');
+}
+
+static void printTernary(struct TernaryExpression *te)
+{
+	putchar('(');
+	printExpression(te->test);
 	fputs(" ? ", stdout);
-	printExpression(ternaryexpression->truepath);
+	printExpression(te->truepath);
 	fputs(" : ", stdout);
-	printExpression(ternaryexpression->falsepath);
+	printExpression(te->falsepath);
 	putchar(')');
 }
 
-static void printOperation(struct OperationExpression *operationexpression)
-{
-	printExpression(operationexpression->lefthand);
-	printf(" %s ", arithop2str[operationexpression->op]);
-	printExpression(operationexpression->righthand);
-}
-
-static void printAssignment(struct AssignmentExpression *assignmentexpression)
+static void printOperation(struct OperationExpression *oe)
 {
 	putchar('(');
-	printf("%s %s ", assignmentexpression->lvalue->name, assignop2str[assignmentexpression->op]);
-	printExpression(assignmentexpression->rvalue);
+	printExpression(oe->lefthand);
+	printf(" %s ", oe->type == _arithmetic ? arithop2str[oe->operator.arithop] : (oe->type == _bitwise ? bitwiseop2str[oe->operator.bitwiseop] : logicalop2str[oe->operator.logicalop]));
+	printExpression(oe->righthand);
 	putchar(')');
 }
 
-static void printFunctionCall(struct FunctionCallExpression *functioncallexpression)
+static void printAssignment(struct AssignmentExpression *ae)
+{
+	putchar('(');
+	printf("%s %s ", ae->lvalue->name, assignop2str[ae->op]);
+	printExpression(ae->rvalue);
+	putchar(')');
+}
+
+static void printFunctionCall(struct FunctionCallExpression *fce)
 {
 	ExpressionList *e;
 
-	printf("%s(", functioncallexpression->function->name);
+	printf("%s(", fce->function->name);
 
-    foreach_expression(e, functioncallexpression->paramlist)
+    foreach_expression(e, fce->paramlist)
     {
     	printExpression(e->expression);
 
