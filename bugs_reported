@@ -1,3 +1,4 @@
 Clang
 
  * (05/18/12) http://llvm.org/bugs/show_bug.cgi?id=12868 (fixed)
+ * (05/19/12) http://llvm.org/bugs/show_bug.cgi?id=12887 (fixed)
