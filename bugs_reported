@@ -4,7 +4,9 @@ Clang
  * (05/19/12) http://llvm.org/bugs/show_bug.cgi?id=12886
  * (05/19/12) http://llvm.org/bugs/show_bug.cgi?id=12887 (fixed)
  * (05/20/12) http://llvm.org/bugs/show_bug.cgi?id=12889 (fixed)
- * (05/20/12) http://llvm.org/bugs/show_bug.cgi?id=12897
+ * (05/20/12) http://llvm.org/bugs/show_bug.cgi?id=12897 
+ * (05/23/12) http://llvm.org/bugs/show_bug.cgi?id=12927 (fixed)
+ * (05/23/12) http://llvm.org/bugs/show_bug.cgi?id=12929
 
 GCC
 
