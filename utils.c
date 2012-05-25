@@ -29,16 +29,6 @@ void die(const char *format, ...)
     exit(EXIT_FAILURE);
 }
 
-void info(const char *format, ...)
-{
-    va_list vargs;
-
-    va_start(vargs, format);
-    fprintf(stdout, "(\033[32mI\033[0m) ccg: ");
-    vfprintf(stdout, format, vargs);
-    fprintf(stdout, "\n");
-}
-
 void *xmalloc(size_t size)
 {
     void *ptr = malloc(size);

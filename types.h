@@ -161,6 +161,7 @@ typedef struct Expr
 			* A ternary expression, for instance (var == var2 ? 0x42 : othervar)
 			* An arithmetic operation, for instance (var / 3)
 			* A simple operand, an operand being the simplest item we manipulate (that is to say a variable or a integer constant)
+			* The value returned by a function call
 	*/
 	union
 	{
