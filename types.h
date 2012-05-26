@@ -229,5 +229,5 @@ typedef struct
 
 typedef struct
 {
-    short max_functions, max_localvars, max_function_parameters, max_statements_per_block, max_expression_nesting, max_block_nesting;
+    unsigned seed, max_functions, max_localvars, max_function_parameters, max_statements_per_block, max_expression_nesting, max_block_nesting;
 } CommandlineOpt;

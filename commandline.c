@@ -26,6 +26,7 @@ static void printHelp(void)
 {
     puts("    -h, --help\t\t\t\tShow this help");
     puts("    -v, --version\t\t\tPrint the version of CCG");
+    puts("    --seed\t\t\t\tUse a custom seed (instead of a random one)");
     puts("    --max-functions\t\t\tMax number of functions to be generated (default 12)");
     puts("    --max-localvars\t\t\tMax number of variables in a block (default 4)");
     puts("    --max-function-parameters\t\tMax number of parameters for a function (default 4)");
@@ -43,9 +44,9 @@ static void printVersion(void)
 
 static void setopt(int index)
 {
-    short * const index2member[] =
+    unsigned * const index2member[] =
     {
-        &cmdline.max_functions, &cmdline.max_localvars, &cmdline.max_function_parameters,
+        &cmdline.seed, &cmdline.max_functions, &cmdline.max_localvars, &cmdline.max_function_parameters,
         &cmdline.max_statements_per_block, &cmdline.max_expression_nesting, &cmdline.max_block_nesting
     };
 
@@ -59,10 +60,11 @@ static void setopt(int index)
 
 void processCommandline(int argc, char **argv)
 {
-    int i, c, index = 0;
+    int c, index = 0;
 
     const struct option longopt[] =
     {
+        {"seed", required_argument, NULL, 0},
         {"max-functions", required_argument, NULL, 0},
         {"max-localvars", required_argument, NULL, 0},
         {"max-function-parameters", required_argument, NULL, 0},
@@ -92,5 +94,6 @@ void processCommandline(int argc, char **argv)
 
             default:
                 break;
+        }
     }
 }

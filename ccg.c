@@ -33,7 +33,6 @@ static unsigned getseed(void)
 
 static void init(void)
 {
-    srand(getseed());
     program.globalvars = NULL, program.functions = NULL;
     program.numfunctions = program.numglobalvars = 0;
 
@@ -44,12 +43,15 @@ static void init(void)
     cmdline.max_statements_per_block = 7;
     cmdline.max_expression_nesting = 8;
     cmdline.max_block_nesting = 7;
+    cmdline.seed = getseed();
 }
 
 static void printProgram(void)
 {
     FunctionList *f;
     VariableList *v;
+
+    printf("/* Seed: %d */\n", cmdline.seed);
 
     puts("#include <stdint.h>");
     puts("#include <stdlib.h>\n\n/* Global variables */");
@@ -79,6 +81,7 @@ int main(int argc, char **argv)
 {
     init();
     processCommandline(argc, argv);
+    srand(cmdline.seed);
     makeGlobalVariables();
     makeRandomFunction(false);
     printProgram();
