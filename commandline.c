@@ -22,7 +22,7 @@ extern char *optarg;
 
 CommandlineOpt cmdline;
 
-static void printHelp()
+static void printHelp(void)
 {
     puts("    -h, --help\t\t\t\tShow this help");
     puts("    -v, --version\t\t\tPrint the version of CCG");
@@ -35,7 +35,7 @@ static void printHelp()
     exit(EXIT_SUCCESS);
 }
 
-static void printVersion()
+static void printVersion(void)
 {
     puts("This is ccg version " CCG_VERSION);
     exit(EXIT_SUCCESS);
@@ -83,14 +83,14 @@ void processCommandline(int argc, char **argv)
                 break;
 
             case 'h':
-            printHelp();
-            break;
+                printHelp();
+                break;
 
-        case 'v':
-            printVersion();
-            break;
+            case 'v':
+                printVersion();
+                break;
 
-        default:
-            break;
+            default:
+                break;
     }
 }
