@@ -28,33 +28,33 @@ Block *makeRandomBlock(VariableList *pscope, unsigned nesting)
     /* Make a copy of the list of the currently usable variables. This way, we will be able to add variables in a clean list without corrupting the one that's been passed by parameters */
     /* FIXME: this is a poor solution. It wastes a lot of memory */
     copyVariableList(pscope, &scope);
-    
+
     ret->localvars = NULL, ret->statementlist = NULL;
     ret->numlocalvars = ret->numstatements = 0;
 
-	/* 1st step: generate some random vars (at least 1 if we are in the body of a function */
-	ret->numlocalvars = rand() % cmdline.max_localvars + !nesting;
+    /* 1st step: generate some random vars (at least 1 if we are in the body of a function */
+    ret->numlocalvars = rand() % cmdline.max_localvars + !nesting;
 
-	for(i = 0; i < ret->numlocalvars; ++i)
-	{
-	    Variable *tmp = makeRandomVariable(scope);
-	    addVariableToList(tmp, &(ret->localvars));
-	    addVariableToList(tmp, &scope);
-	}
+    for(i = 0; i < ret->numlocalvars; ++i)
+    {
+        Variable *tmp = makeRandomVariable(scope);
+        addVariableToList(tmp, &(ret->localvars));
+        addVariableToList(tmp, &scope);
+    }
 
-	/* 2nd step: generate some random statements ! */
-	if(nesting < cmdline.max_block_nesting)
-	{
-	    ret->numstatements = rand() % cmdline.max_statements_per_block;
+    /* 2nd step: generate some random statements ! */
+    if(nesting < cmdline.max_block_nesting)
+    {
+        ret->numstatements = rand() % cmdline.max_statements_per_block;
 
-	    for(i = 0; i < ret->numstatements; ++i)
-	    {
-	        Statement *tmp = makeRandomStatement(scope, nesting);
-	        addStatementToList(tmp, &ret->statementlist);
-	    }
-	}
+        for(i = 0; i < ret->numstatements; ++i)
+        {
+            Statement *tmp = makeRandomStatement(scope, nesting);
+            addStatementToList(tmp, &ret->statementlist);
+        }
+    }
 
-	return ret;
+    return ret;
 }
 
 
@@ -66,10 +66,10 @@ void printBlock(Block *block)
     puts("{");
 
     foreach_variable(v, block->localvars)
-	    printVariable(v->variable);
+        printVariable(v->variable);
 
-	foreach_statement(s, block->statementlist)
-	    printStatement(s->statement);
+    foreach_statement(s, block->statementlist)
+        printStatement(s->statement);
 
     puts("}");
 }

@@ -20,15 +20,15 @@
 
 Operand *pickRandomOperand(VariableList *scope)
 {
-	Variable *var;
-	Operand *operand = xmalloc(sizeof(*operand));
+    Variable *var;
+    Operand *operand = xmalloc(sizeof(*operand));
 
-	operand->type = rand() % 3 == 0 ? _constant : _variable;
+    operand->type = rand() % 3 == 0 ? _constant : _variable;
 
-	if(operand->type == _variable)
-		operand->op.variable = pickRandomVariable(scope);
-	else
-		operand->op.constant = makeRandomIntegerConstant(RANDOM_BITNESS);
+    if(operand->type == _variable)
+        operand->op.variable = pickRandomVariable(scope);
+    else
+        operand->op.constant = makeRandomIntegerConstant(RANDOM_BITNESS);
 
-	return operand;
+    return operand;
 }

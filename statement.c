@@ -50,7 +50,7 @@ void addStatementToList(Statement *statement, StatementList **list)
         (*list)->statement = statement;
         (*list)->next = NULL;
     }
-    
+
     else
     {
         StatementList *s;
@@ -91,7 +91,7 @@ static void buildIf(Statement *statement, VariableList *scope, unsigned nesting)
 
     ifstatement->condition = makeRandomExpression(scope, 0);
     ifstatement->truepath = makeRandomBlock(scope, nesting + 1);
-    
+
     /* An else branch is generated 30% of the time */
     ifstatement->falsepath = !(rand() % 3) ? makeRandomBlock(scope, nesting + 1) : NULL;
 
@@ -182,8 +182,8 @@ static void printForStatement(Statement *statement)
     ForStatement *forstatement = statement->stmnt.forstatement;
 
     printf("for(%s = %d; %s %s %d; %s %s %d)\n", forstatement->iterator->name, forstatement->init,
-        forstatement->iterator->name, testop2str[forstatement->testop], forstatement->testval,
-        forstatement->iterator->name, assignop2str[forstatement->assignop], forstatement->incval);
+           forstatement->iterator->name, testop2str[forstatement->testop], forstatement->testval,
+           forstatement->iterator->name, assignop2str[forstatement->assignop], forstatement->incval);
     printBlock(forstatement->body);
 }
 

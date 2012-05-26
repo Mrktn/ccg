@@ -55,9 +55,7 @@ static void printProgram(void)
     puts("#include <stdlib.h>\n\n/* Global variables */");
 
     foreach_variable(v, program.globalvars)
-    {
         printVariable(v->variable);
-    }
 
     puts("\n/* Function prototypes */");
 
@@ -70,9 +68,7 @@ static void printProgram(void)
     putchar('\n');
 
     foreach_function(f, program.functions)
-    {
         printFunction(f->function);
-    }
 
     puts("\nint main(void)\n{\n"
          "func_0();\n"

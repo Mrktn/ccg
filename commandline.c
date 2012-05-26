@@ -63,10 +63,10 @@ void processCommandline(int argc, char **argv)
 
     const struct option longopt[] =
     {
-    	{"max-functions", required_argument, NULL, 0},
-    	{"max-localvars", required_argument, NULL, 0},
-    	{"max-function-parameters", required_argument, NULL, 0},
-    	{"max-statements-per-block", required_argument, NULL, 0},
+        {"max-functions", required_argument, NULL, 0},
+        {"max-localvars", required_argument, NULL, 0},
+        {"max-function-parameters", required_argument, NULL, 0},
+        {"max-statements-per-block", required_argument, NULL, 0},
         {"max-expression-nesting", required_argument, NULL, 0},
         {"max-block-nesting", required_argument, NULL, 0},
         {"help", no_argument, NULL, 0},
@@ -76,22 +76,22 @@ void processCommandline(int argc, char **argv)
 
     while((c = getopt_long(argc, argv, "hv", longopt, &index)) != -1)
     {
-    	switch(c)
-    	{
-    		case 0:
-    			setopt(index);
-    			break;
+        switch(c)
+        {
+        case 0:
+            setopt(index);
+            break;
 
-    		case 'h':
-    			printHelp();
-                break;
+        case 'h':
+            printHelp();
+            break;
 
-            case 'v':
-                printVersion();
-                break;
+        case 'v':
+            printVersion();
+            break;
 
-    		default:
-	    		break;
-    	}
+        default:
+            break;
+        }
     }
 }

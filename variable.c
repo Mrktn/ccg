@@ -48,9 +48,11 @@ static char *makeVariableName(VariableType type, unsigned char qualifiers, Varia
     char *name, buf[8];
 
     if(list)
+    {
         foreach_variable(v, list)
             if(v->variable->type == type)
                 ++cnt;
+    }
 
     if(type == _u8 || type == _u16 || type == _u32)
         ++sz;
@@ -87,14 +89,14 @@ void printVariable(Variable *variable)
 void copyVariableList(VariableList *src, VariableList **dest)
 {
     VariableList *v;
-    
+
     foreach_variable(v, src)
     {
         Variable *var = xmalloc(sizeof(*var));
-        
+
         /* OK. We make a copy of the variable, but no need to duplicate its name */
         memcpy(var, v->variable, sizeof(*var));
-        
+
         /* Then we add it to the destination list. So much allocated memory without a single free... FIXME. */
         addVariableToList(var, dest);
     }
@@ -154,7 +156,8 @@ Variable *pickRandomWriteableVariable(VariableList *list)
                 break;
             }
         }
-    } while(!(var->permissions & P_WRITEABLE));
+    }
+    while(!(var->permissions & P_WRITEABLE));
 
     /* We are sure not to go in an infinite loop since we have already checked for them using writeableVariablesExist */
 

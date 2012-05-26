@@ -37,8 +37,8 @@ Constant makeRandomIntegerConstant(unsigned bits)
     Constant ret;
     char *hexvalue = ((rand() % 3) ? makeRandomHexadecimalValue(bits / 4) : "0"); /* 30% of the time, a zero is generated */
 
-	ret.value   = xcalloc(4 + strlen(hexvalue), 1);
-	ret.bitness = bits;
+    ret.value   = xcalloc(4 + strlen(hexvalue), 1);
+    ret.bitness = bits;
 
     sprintf(ret.value, "0x%s", hexvalue);
 
