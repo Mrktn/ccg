@@ -78,11 +78,11 @@ void processCommandline(int argc, char **argv)
     {
         switch(c)
         {
-        case 0:
-            setopt(index);
-            break;
+            case 0:
+                setopt(index);
+                break;
 
-        case 'h':
+            case 'h':
             printHelp();
             break;
 
@@ -92,6 +92,5 @@ void processCommandline(int argc, char **argv)
 
         default:
             break;
-        }
     }
 }
