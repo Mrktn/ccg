@@ -56,7 +56,6 @@ Function *makeRandomFunction(bool params)
     short i;
     Function *ret = xmalloc(sizeof(Function));
     VariableList *scope = params ? NULL : program.globalvars;
-    //Context context;
 
     ret->paramlist = NULL;
     ret->returntype = rand() % _typemax;

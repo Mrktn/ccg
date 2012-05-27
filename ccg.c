@@ -23,8 +23,12 @@ Program program;
 /* TODO: make it portable across Windows */
 static unsigned getseed(void)
 {
-    int urandom = open("/dev/urandom", O_RDONLY);
     unsigned seed;
+    int urandom = open("/dev/urandom", O_RDONLY);
+
+    if(urandom == -1)
+        die("couldn't open /dev/urandom for reading.");
+
     read(urandom, &seed, sizeof(unsigned));
     close(urandom);
 
@@ -33,7 +37,7 @@ static unsigned getseed(void)
 
 static void init(void)
 {
-    program.globalvars = NULL, program.functions = NULL;
+    program.globalvars = program.functions = NULL;
     program.numfunctions = program.numglobalvars = 0;
 
     /* Default settings */
