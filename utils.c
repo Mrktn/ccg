@@ -33,8 +33,7 @@ void *xmalloc(size_t size)
 {
     void *ptr = malloc(size);
 
-    /* Since xmalloc is a hot path, let's use branch prediction to optimize it a bit */
-    if(unlikely(!ptr))
+    if(!ptr)
         die("cannot allocate memory !");
 
     return ptr;
@@ -44,7 +43,7 @@ void *xcalloc(size_t nmemb, size_t size)
 {
     void *ptr = calloc(nmemb, size);
 
-    if(unlikely(!ptr))
+    if(!ptr)
         die("cannot allocate memory !");
 
     return ptr;

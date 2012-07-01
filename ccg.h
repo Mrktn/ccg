@@ -43,9 +43,6 @@
 
 #define RANDOM_BITNESS (8 * pow(2, rand() % 3))
 
-#define likely(x)       __builtin_expect((x),1)
-#define unlikely(x)     __builtin_expect((x),0)
-
 #define CCG_VERSION "0.1"
 
 extern CommandlineOpt cmdline;
