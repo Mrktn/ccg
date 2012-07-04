@@ -99,8 +99,6 @@ void copyVariableList(VariableList *src, VariableList **dest)
 
         /* OK. We make a copy of the variable, but no need to duplicate its name */
         memcpy(var, v->variable, sizeof(*var));
-
-        /* Then we add it to the destination list. So much allocated memory without a single free... FIXME. */
         addVariableToList(var, dest);
     }
 }
