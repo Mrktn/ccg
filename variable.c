@@ -1,25 +1,27 @@
-/*  C Code Generator
+/* C Code Generator
  *
- *  Copyright (c) 2012, Antoine Balestrat, merkil@savhon.org
+ * Copyright (C) 2012, Antoine Balestrat <merkil@savhon.org>
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 
 #include "ccg.h"
-
-static const char *type2varid[_typemax] = {"c", "uc", "s", "us", "i", "ui"};
-const char *type2str[_typemax] = {"int8_t", "uint8_t", "int16_t", "uint16_t", "int32_t", "uint32_t"};
 
 void addVariableToList(Variable *variable, VariableList **list)
 {
@@ -41,56 +43,57 @@ void addVariableToList(Variable *variable, VariableList **list)
     }
 }
 
-static char *makeVariableName(VariableType type, unsigned char qualifiers, VariableList *list)
-{
-    VariableList *v;
-    size_t cnt = 0, sz = 2;
-    char *name, buf[8];
-
-    if(list)
-    {
-        foreach_variable(v, list)
-            if(v->variable->type == type)
-                ++cnt;
-    }
-
-    if(type == _u8 || type == _u16 || type == _u32)
-        ++sz;
-
-    sz += strlen(type2varid[type]);
-
-    sprintf(buf, "%lu", cnt);
-    sz += strlen(buf);
-    name = xcalloc(sz, 1);
-
-    strcat(name, type2varid[type]);
-    strcat(name, buf);
-
-    return name;
-}
-
-Variable *makeRandomVariable(VariableList *scope)
+Variable *makeVariable(VariableList *scope, VariableType type)
 {
     Variable *ret = xmalloc(sizeof(Variable));
 
-    ret->type = rand() % _typemax;
-    ret->permissions = P_WRITEABLE;
-    ret->initializer = makeRandomIntegerConstant(VARTYPE_TO_BITNESS(ret->type));
+    if(type != _randomvartype)
+    {
+        ret->type = type;
 
-    ret->name = makeVariableName(ret->type, 0, scope);
+        if(type == _integer)
+            makeInteger(ret, scope);
+        else
+            makePointer(ret, scope);
+    }
+
+    else
+    {
+        if((ret->type = rand() % _vartypemax) == _integer)
+            makeInteger(ret, scope);
+        else if(ret->type == _pointer)
+            makePointer(ret, scope);
+    }
+
     return ret;
 }
 
-void printVariable(Variable *variable)
+void printVariableDecl(Variable *var)
 {
-    printf("%s %s = %s;\n", type2str[variable->type], variable->name, variable->initializer.value);
+    if(var->type == _integer)
+        printIntegerDecl(var);
+    else
+        printPointerDecl(var);
+}
+
+void printVariableType(Variable *var)
+{
+    printf("%s", inttype2str[ultimateType(var)]);
+
+    if(var->type == _pointer)
+    {
+        size_t n = pointerDepth(var);
+
+        for(size_t i = 0; i < n; ++i)
+            putchar('*');
+    }
 }
 
 void copyVariableList(VariableList *src, VariableList **dest)
 {
     VariableList *v;
 
-    foreach_variable(v, src)
+    foreach(v, src)
     {
         Variable *var = xmalloc(sizeof(*var));
 
@@ -102,77 +105,43 @@ void copyVariableList(VariableList *src, VariableList **dest)
     }
 }
 
-size_t numVariablesInList(VariableList *list)
+size_t numVariablesInScope(VariableList *scope)
 {
-    VariableList *v;
     size_t i = 0;
+    VariableList *v;
 
-    foreach_variable(v, list)
-        ++i;
+    foreach(v, scope) ++i;
 
     return i;
 }
 
-/* Pick a variable from the `list' */
-Variable *pickRandomVariable(VariableList *list)
+/* Pick a variable from the `scope' which is of type `type' */
+Variable *selectVariable(VariableList *scope, VariableType type)
 {
+    Variable *ret;
     VariableList *v;
-    size_t n = numVariablesInList(list), i = 0, t = rand() % n + 1;
-
-    foreach_variable(v, list)
-        if(++i == t)
-            return v->variable;
-
-    die("unreachable, no variables in scope !");
-    return NULL;
-}
-
-bool writeableVariablesExist(VariableList *list)
-{
-    VariableList *v;
-
-    foreach_variable(v, list)
-        if(v->variable->permissions & P_WRITEABLE)
-            return true;
-
-    return false;
-}
-
-Variable *pickRandomWriteableVariable(VariableList *list)
-{
-    Variable *var = NULL;
-    VariableList *v;
-    size_t n = numVariablesInList(list);
+    size_t n = numVariablesInScope(scope);
 
     do
     {
-        size_t t = rand() % n + 1, i = 0;
+        size_t i = 0, t = rand() % n + 1;
 
-        foreach_variable(v, list)
+        foreach(v, scope)
         {
             if(++i == t)
-            {
-                var = v->variable;
-                break;
-            }
+                ret = v->variable;
         }
-    }
-    while(!(var->permissions & P_WRITEABLE));
+    } while((type == _randomvartype ? 0 : type != ret->type));
 
-    /* We are sure not to go in an infinite loop since we have already checked for them using writeableVariablesExist */
-
-    return var;
+    return ret;
 }
 
 void makeGlobalVariables(void)
 {
-    size_t i = 0;
+    size_t i;
 
     program.numglobalvars = rand() % 10 + 1;
 
-    for(; i < program.numglobalvars; ++i)
-    {
-        Variable *v = makeRandomVariable(program.globalvars);
-        addVariableToList(v, &program.globalvars);
-    }
+    for(i = 0; i < program.numglobalvars; ++i)
+        addVariableToList(makeVariable(program.globalvars, _integer), &program.globalvars);
 }

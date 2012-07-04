@@ -1,38 +1,43 @@
-/*  C Code Generator
+/* C Code Generator
  *
- *  Copyright (c) 2012, Antoine Balestrat, merkil@savhon.org
+ * Copyright (C) 2012, Antoine Balestrat <merkil@savhon.org>
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 
 #include "ccg.h"
 
 /*
-	- Ternary: 10%
-	- Function call: 10%
-	- Operation: 20%
-	- Test: 20%
-	- Assignment: 20%
-	- Operand: 20%
+    - Ternary: 10%
+    - Function call: 10%
+    - Operation: 20%
+    - Test: 20%
+    - Assignment: 20%
+    - Operand: 20%
 */
 static const ExpressionType exprarray[10] = {_ternaryexpr, _functioncallexpr, _operationexpr, _operationexpr, _testexpr, _testexpr, _assignmentexpr, _assignmentexpr};
 
-const char *testop2str[_testopmax] = {"==", "<=", ">=", "<", ">", "!="};
-const char *arithop2str[_arithopmax] = {"+", "-", "/", "*"};
-const char *bitwiseop2str[_bitwiseopmax] = {"&", "|", "^"};
-const char *logicalop2str[_logicalopmax] = {"&&", "||"};
-const char *assignop2str[_assignopmax] = {"+=", "-=", "/=", "*=", "="};
+char const * const testop2str[_testopmax] = {"==", "<=", ">=", "<", ">", "!="};
+char const * const arithop2str[_arithopmax] = {"+", "-", "/", "*"};
+char const * const bitwiseop2str[_bitwiseopmax] = {"&", "|", "^"};
+char const * const logicalop2str[_logicalopmax] = {"&&", "||"};
+char const * const assignop2str[_assignopmax] = {"+=", "-=", "/=", "*=", "="};
 
 void buildOperand(Expression*, VariableList*, unsigned);
 void buildTernary(Expression *expr, VariableList*, unsigned);
@@ -71,13 +76,11 @@ void addExpressionToList(Expression *expression, ExpressionList **list)
     }
 }
 
-#define EXPRESSION_IS_INVALID ((expression->type == _assignmentexpr && !writeableVarsAvailable)\
-                            || (expression->type == _functioncallexpr && program.numfunctions >= cmdline.max_functions))
+#define EXPRESSION_IS_INVALID(t) (((t) == _functioncallexpr && program.numfunctions >= cmdline.max_functions))
 
-Expression *makeRandomExpression(VariableList *scope, unsigned nesting)
+Expression *makeExpression(VariableList *scope, unsigned nesting)
 {
     Expression *expression = xmalloc(sizeof(*expression));
-    bool writeableVarsAvailable = writeableVariablesExist(scope);
 
     /* If we want to put en end to the expression nesting, we have to put an operand, either a variable or a constant */
     if(nesting >= cmdline.max_expression_nesting)
@@ -86,7 +89,7 @@ Expression *makeRandomExpression(VariableList *scope, unsigned nesting)
     {
         do
             expression->type = exprarray[rand() % 10];
-        while(EXPRESSION_IS_INVALID);
+        while(EXPRESSION_IS_INVALID(expression->type));
     }
 
     (buildfunctions[expression->type])(expression, scope, nesting + 1);
@@ -96,7 +99,7 @@ Expression *makeRandomExpression(VariableList *scope, unsigned nesting)
 
 void buildOperand(Expression *expression, VariableList *scope, unsigned nesting)
 {
-    expression->expr.operand = pickRandomOperand(scope);
+    expression->expr.operand = selectOperand(scope);
 }
 
 void buildTest(Expression *expression, VariableList *scope, unsigned nesting)
@@ -104,7 +107,7 @@ void buildTest(Expression *expression, VariableList *scope, unsigned nesting)
     struct TestExpression *te = xmalloc(sizeof(*te));
 
     te->op = rand() % _testopmax;
-    te->lefthand = makeRandomExpression(scope, nesting + 1), te->righthand = makeRandomExpression(scope, nesting + 1);
+    te->lefthand = makeExpression(scope, nesting + 1), te->righthand = makeExpression(scope, nesting + 1);
 
     expression->expr.testexpr = te;
 }
@@ -114,23 +117,16 @@ void buildTernary(Expression *expression, VariableList *scope, unsigned nesting)
     struct TernaryExpression *te = xmalloc(sizeof(*te));
 
     /* Build the test part of the ternary */
-    te->test = makeRandomExpression(scope, nesting + 1);
-    te->truepath = makeRandomExpression(scope, nesting + 1), te->falsepath = makeRandomExpression(scope, nesting + 1);
+    te->test = makeExpression(scope, nesting + 1);
+    te->truepath = makeExpression(scope, nesting + 1), te->falsepath = makeExpression(scope, nesting + 1);
     expression->expr.ternexpr = te;
 }
-
-#define IS_FLOATING_POINT_VARIABLE(expression) ((expression->type == _operandexpr)\
-                                                && (expression->expr.operand->type == _variable)\
-                                                && ((expression->expr.operand->op.variable->type == _double) || (expression->expr.operand->op.variable->type == _float)))\
- 
-#define OPERATION_OP_IS_INVALID(oprtr, left, right) (((IS_FLOATING_POINT_VARIABLE(left)) || (IS_FLOATING_POINT_VARIABLE(right)))\
-														&& (oprtr == _mod))
 
 void buildOperation(Expression *expression, VariableList *scope, unsigned nesting)
 {
     struct OperationExpression *oe = xmalloc(sizeof(*oe));
 
-    oe->lefthand = makeRandomExpression(scope, nesting + 1), oe->righthand = makeRandomExpression(scope, nesting + 1);
+    oe->lefthand = makeExpression(scope, nesting + 1), oe->righthand = makeExpression(scope, nesting + 1);
     oe->type = rand() % _operationtypemax;
 
     if(oe->type == _arithmetic)
@@ -149,10 +145,10 @@ void buildAssignment(Expression *expression, VariableList *scope, unsigned nesti
 {
     struct AssignmentExpression *ae = xmalloc(sizeof(*ae));
 
-    if(!(ae->lvalue = pickRandomWriteableVariable(scope)))
+    if(!(ae->lvalue = selectVariable(scope, _randomvartype)))
         die("you kidding");
 
-    ae->rvalue = makeRandomExpression(scope, nesting + 1);
+    ae->rvalue = makeExpression(scope, nesting + 1);
     ae->op = rand() % _assignopmax;
 
     expression->expr.assignexpr= ae;
@@ -164,10 +160,10 @@ void buildFunctionCall(Expression *expression, VariableList *scope, unsigned nes
     VariableList *v;
 
     fce->paramlist = NULL;
-    fce->function = makeRandomFunction(true);
+    fce->function = makeFunction(true);
 
-    foreach_variable(v, fce->function->paramlist)
-        addExpressionToList(makeRandomExpression(scope, nesting + 1), (ExpressionList**) &fce->paramlist);
+    foreach(v, fce->function->paramlist)
+        addExpressionToList(makeExpression(scope, nesting + 1), (ExpressionList**) &fce->paramlist);
 
     expression->expr.funccallexpr = fce;
 }
@@ -175,7 +171,7 @@ void buildFunctionCall(Expression *expression, VariableList *scope, unsigned nes
 static void printOperand(Operand *op)
 {
     if(op->type == _variable)
-        fputs(op->op.variable->name, stdout);
+        fputs(USABLE_ID(op->op.variable), stdout);
     else
         printConstant(&op->op.constant);
 }
@@ -212,7 +208,7 @@ static void printOperation(struct OperationExpression *oe)
 static void printAssignment(struct AssignmentExpression *ae)
 {
     putchar('(');
-    printf("%s %s ", ae->lvalue->name, assignop2str[ae->op]);
+    printf("%s %s ", USABLE_ID(ae->lvalue), assignop2str[ae->op]);
     printExpression(ae->rvalue);
     putchar(')');
 }
@@ -223,7 +219,7 @@ static void printFunctionCall(struct FunctionCallExpression *fce)
 
     printf("%s(", fce->function->name);
 
-    foreach_expression(e, fce->paramlist)
+    foreach(e, fce->paramlist)
     {
         printExpression(e->expression);
 

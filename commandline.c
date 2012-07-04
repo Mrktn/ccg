@@ -1,19 +1,24 @@
-/*  C Code Generator
+/* C Code Generator
  *
- *  Copyright (c) 2012, Antoine Balestrat, merkil@savhon.org
+ * Copyright (C) 2012, Antoine Balestrat <merkil@savhon.org>
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 
 #include "ccg.h"
@@ -33,6 +38,7 @@ static void printHelp(void)
     puts("    --max-statements-per-block\t\tMax number of statements in each block (default 7)");
     puts("    --max-expression-nesting\t\tControl the complexity of the expressions (default 8)");
     puts("    --max-block-nesting\t\t\tControl the nesting of the blocks (default 7)");
+    puts("    --max-pointer-depth\t\t\tMaximum depth of a pointer (default 2)");
     exit(EXIT_SUCCESS);
 }
 
@@ -47,14 +53,14 @@ static void setopt(int index)
     unsigned * const index2member[] =
     {
         &cmdline.seed, &cmdline.max_functions, &cmdline.max_localvars, &cmdline.max_function_parameters,
-        &cmdline.max_statements_per_block, &cmdline.max_expression_nesting, &cmdline.max_block_nesting
+        &cmdline.max_statements_per_block, &cmdline.max_expression_nesting, &cmdline.max_block_nesting, &cmdline.max_pointer_depth
     };
 
-    if(index >= 0 && index <= 5)
+    if(index >= 0 && index <= 6)
         *(index2member[index]) = strtol(optarg, NULL, 10);
-    else if(index == 6)
-        printHelp();
     else if(index == 7)
+        printHelp();
+    else if(index == 8)
         printVersion();
 }
 

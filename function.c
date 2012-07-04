@@ -1,19 +1,24 @@
-/*  C Code Generator
+/* C Code Generator
  *
- *  Copyright (c) 2012, Antoine Balestrat, merkil@savhon.org
+ * Copyright (C) 2012, Antoine Balestrat <merkil@savhon.org>
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following conditions:
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU General Public License for more details.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 
 #include "ccg.h"
@@ -38,28 +43,28 @@ void addFunctionToList(Function *function, FunctionList **list)
     }
 }
 
-char *makeRandomFunctionName(void)
+char *makeFunctionName(void)
 {
     char *name;
     char buff[8];
 
-    sprintf(buff, "%d", program.numfunctions);
+    sprintf(buff, "%zu", program.numfunctions);
     name = malloc(strlen(buff) + 1);
-    sprintf(name, "func_%d", program.numfunctions);
+    sprintf(name, "func_%zu", program.numfunctions);
 
     return name;
 }
 
 /* At this point, only global variables are available */
-Function *makeRandomFunction(bool params)
+Function *makeFunction(bool params)
 {
     short i;
     Function *ret = xmalloc(sizeof(Function));
     VariableList *scope = params ? NULL : program.globalvars;
 
     ret->paramlist = NULL;
-    ret->returntype = rand() % _typemax;
-    ret->name = makeRandomFunctionName();
+    ret->returntype = rand() % _inttypemax;
+    ret->name = makeFunctionName();
     ret->numparams = params ? rand() % (cmdline.max_function_parameters + 1) : 0;
 
     program.numfunctions++;
@@ -70,13 +75,13 @@ Function *makeRandomFunction(bool params)
 
         for(i = 0; i < ret->numparams; ++i)
         {
-            Variable *v = makeRandomVariable(scope);
+            Variable *v = makeVariable(scope, _integer);
             addVariableToList(v, &ret->paramlist);
             addVariableToList(v, &scope);
         }
     }
 
-    ret->body = makeRandomBlock(scope, 0);
+    ret->body = makeBlock(scope, 0);
 
     addFunctionToList(ret, &program.functions);
     return ret;
@@ -86,12 +91,13 @@ void printFunctionPrototype(Function *function)
 {
     VariableList *v;
 
-    printf("%s %s(", type2str[function->returntype], function->name);
+    printf("%s %s(", inttype2str[function->returntype], function->name);
 
-    foreach_variable(v, function->paramlist)
+    foreach(v, function->paramlist)
     {
         printf(v == function->paramlist ? "" : ", ");
-        printf("%s %s", type2str[v->variable->type], v->variable->name);
+        printVariableType(v->variable);
+        printf(" %s", v->variable->name);
     }
 
     printf(")");
