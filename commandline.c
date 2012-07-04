@@ -29,16 +29,16 @@ CommandlineOpt cmdline;
 
 static void printHelp(void)
 {
-    puts("    -h, --help\t\t\t\tShow this help");
-    puts("    -v, --version\t\t\tPrint the version of CCG");
-    puts("    --seed\t\t\t\tUse a custom seed (instead of a random one)");
-    puts("    --max-functions\t\t\tMax number of functions to be generated (default 12)");
-    puts("    --max-localvars\t\t\tMax number of variables in a block (default 4)");
-    puts("    --max-function-parameters\t\tMax number of parameters for a function (default 4)");
-    puts("    --max-statements-per-block\t\tMax number of statements in each block (default 7)");
-    puts("    --max-expression-nesting\t\tControl the complexity of the expressions (default 8)");
-    puts("    --max-block-nesting\t\t\tControl the nesting of the blocks (default 7)");
-    puts("    --max-pointer-depth\t\t\tMaximum depth of a pointer (default 2)");
+    puts("  -h, --help\t\t\tShow this help");
+    puts("  -v, --version\t\t\tPrint the version of CCG");
+    puts("  --seed\t\t\tUse a custom seed (instead of a random one)");
+    puts("  --max-functions\t\tMax number of functions to be generated (default 12)");
+    puts("  --max-localvars\t\tMax number of variables in a block (default 4)");
+    puts("  --max-function-parameters\tMax number of parameters for a function (default 4)");
+    puts("  --max-statements-per-block\tMax number of statements in each block (default 7)");
+    puts("  --max-expression-nesting\tControl the complexity of the expressions (default 8)");
+    puts("  --max-block-nesting\t\tControl the nesting of the blocks (default 7)");
+    puts("  --max-pointer-depth\t\tMaximum depth of a pointer (default 2)");
     exit(EXIT_SUCCESS);
 }
 
