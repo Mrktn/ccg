@@ -26,15 +26,17 @@
 /*
     - If: 20%
     - For: 20%
-    - Assignment: 30%
+    - Pointer Assignment : 10%
+    - Assignment: 20%
     - Function call: 20%
     - Return: 10%
 */
-static const StatementType statarray[10] = {_if, _if, _for, _for, _assignment, _assignment, _assignment, _functioncall, _functioncall, _return};
+static const StatementType statarray[10] = {_if, _if, _for, _for, _assignment, _assignment, _ptrassignment, _functioncall, _functioncall, _return};
 
 static void buildIf(Statement*, VariableList*, unsigned);
 static void buildFor(Statement*, VariableList*, unsigned);
 static void buildAssignment(Statement*, VariableList*, unsigned);
+static void buildPtrAssignment(Statement*, VariableList*, unsigned);
 static void buildFunctionCall(Statement*, VariableList*, unsigned);
 static void buildReturn(Statement*, VariableList*, unsigned);
 
@@ -43,6 +45,7 @@ static void (*buildfunctions[_statementtypemax])(Statement*, VariableList*, unsi
     [_if] = buildIf,
     [_for] = buildFor,
     [_assignment] = buildAssignment,
+    [_ptrassignment] = buildPtrAssignment,
     [_functioncall] = buildFunctionCall,
     [_return] = buildReturn
 };
@@ -68,7 +71,8 @@ void addStatementToList(Statement *statement, StatementList **list)
 }
 
 #define IS_INVALID ((type == _return && !nesting)\
-                    || (type == _functioncall && program.numfunctions >= cmdline.max_functions))
+                    || (type == _functioncall && program.numfunctions >= cmdline.max_functions)\
+                    || (type == _ptrassignment && !(pointersInScope(scope))))
 
 Statement *makeStatement(VariableList *scope, unsigned nesting)
 {
@@ -134,29 +138,46 @@ static void buildFunctionCall(Statement *statement, VariableList *scope, unsigne
     statement->stmnt.funccallstatement = funccallstatement;
 }
 
-/* TODO: should generate pointer assignments too */
 static void buildAssignment(Statement *statement, VariableList *scope, unsigned nesting)
 {
-    AssignmentStatement *assignmentstatement = xmalloc(sizeof(*assignmentstatement));
+    AssignmentStatement *as = xmalloc(sizeof(*as));
 
-    assignmentstatement->var = selectVariable(scope, _randomvartype);
-    assignmentstatement->op = rand() % _assignopmax /*_assign*/;
-    assignmentstatement->expr = makeExpression(scope, 0);
+    as->var = selectVariable(scope, _randomvartype);
+    as->op = rand() % _assignopmax /*_assign*/;
+    as->expr = makeExpression(scope, 0);
 
-    statement->stmnt.assignmentstatement = assignmentstatement;
+    statement->stmnt.assignmentstatement = as;
+}
+
+#define PTRASSIGNMENT_IS_CONSISTENT(lhs, rhs) (INTEGERTYPE_SIZE(ultimateType(lhs)) <= INTEGERTYPE_SIZE(ultimateType(rhs)))
+
+static void buildPtrAssignment(Statement *statement, VariableList *scope, unsigned nesting)
+{
+    Variable *v;
+    PtrAssignmentStatement *pas = xmalloc(sizeof(*pas));
+
+    pas->lhs = selectVariable(scope, _pointer);
+
+    do
+    {
+        v = selectVariable(scope, _randomvartype);
+    } while(!PTRASSIGNMENT_IS_CONSISTENT(pas->lhs, v));
+
+    pas->rhs = v;
+
+    statement->stmnt.ptrassignmentstatement = pas;
 }
 
 static void buildReturn(Statement *statement, VariableList *scope, unsigned nesting)
 {
-    ReturnStatement *returnstatement = xmalloc(sizeof(*returnstatement));
+    ReturnStatement *rs = xmalloc(sizeof(*rs));
 
-    returnstatement->retval = selectOperand(scope);
+    rs->retval = selectOperand(scope);
 
-    statement->stmnt.returnstatement = returnstatement;
+    statement->stmnt.returnstatement = rs;
 }
 
 
-/***** Print functions *****/
 
 static void printIfStatement(Statement *statement)
 {
@@ -195,6 +216,27 @@ static void printAssignmentStatement(Statement *statement)
     puts(";");
 }
 
+static void printPtrAssignmentStatement(Statement *statement)
+{
+    PtrAssignmentStatement *pas = statement->stmnt.ptrassignmentstatement;
+    size_t lhsdepth = pointerDepth(pas->lhs), rhsdepth = pointerDepth(pas->rhs);
+
+    if(pas->rhs->type == _pointer)
+    {
+        if(lhsdepth == rhsdepth)
+            printf("%s = %s;\n", pas->lhs->name, pas->rhs->name);
+        else if(lhsdepth < rhsdepth)
+            printf("%s = %s%s;\n", pas->lhs->name, genStars(rhsdepth - lhsdepth), pas->rhs->name);
+        else
+            printf("%s%s = %s;\n", genStars(lhsdepth - rhsdepth), pas->lhs->name, pas->rhs->name);
+    }
+
+    else
+    {
+        printf("%s%s = &%s;\n", genStars(lhsdepth - rhsdepth - 1), pas->lhs->name, pas->rhs->name);
+    }
+}
+
 static void printFunctionCallStatement(Statement *statement)
 {
     ExpressionList *e;
@@ -220,7 +262,6 @@ static void printReturnStatement(Statement *statement)
     printf("return %s;\n", retval->type == _variable ? USABLE_ID(retval->op.variable) : retval->op.constant.value);
 }
 
-/* TODO: add a printX method for each type of statement ? Would be much clearer. */
 void printStatement(Statement *statement)
 {
     static void (*printfunctions[_statementtypemax])(Statement*) =
@@ -229,6 +270,7 @@ void printStatement(Statement *statement)
         [_for] = printForStatement,
         [_return] = printReturnStatement,
         [_assignment] = printAssignmentStatement,
+        [_ptrassignment] = printPtrAssignmentStatement,
         [_functioncall] = printFunctionCallStatement
     };
 

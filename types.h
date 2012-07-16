@@ -29,7 +29,7 @@ typedef int bool;
 #define false 0
 
 typedef enum {_i8, _u8, _i16, _u16, _i32, _u32, _inttypemax} IntegerType;
-typedef enum {_if, _for, _functioncall, _return, _assignment, _statementtypemax} StatementType;
+typedef enum {_if, _for, _functioncall, _return, _assignment, _ptrassignment, _statementtypemax} StatementType;
 typedef enum {_variable, _constant, _operandtypemax, _none = 42} OperandType;
 typedef enum {_equal, _lowerorequal, _greaterorequal, _lower, greater, _different, _testopmax} TestOp;
 typedef enum {_plus, _minus, _div, _mul, _arithopmax} ArithOp;
@@ -117,7 +117,6 @@ typedef struct
     Block *body;
 } WhileStatement;
 
-/* for(iterator = init; iterator testop val; iterator assignop incval) */
 typedef struct
 {
     Variable *iterator;
@@ -130,9 +129,14 @@ typedef struct
 typedef struct
 {
     Variable *var;
-    void *expr;    /* This is an Expression */
+    void *expr;
     AssignmentOp op;
 } AssignmentStatement;
+
+typedef struct
+{
+    Variable *lhs, *rhs;
+} PtrAssignmentStatement;
 
 typedef struct
 {
@@ -165,6 +169,7 @@ typedef struct Stmnt
         ForStatement *forstatement;
         FunctionCallStatement *funccallstatement;
         AssignmentStatement *assignmentstatement;
+        PtrAssignmentStatement *ptrassignmentstatement;
         ReturnStatement *returnstatement;
     } stmnt;
 } Statement;
