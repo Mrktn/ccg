@@ -39,7 +39,7 @@
  #if __clang_major__ < 3 || (__clang_major__ == 3 && __clang_minor__ < 1)
  # error Clang 3.1 or newer is needed for C11 anonymous structs and unions
  #endif
-#elif define __GNUC__
+#elif defined __GNUC__
  #define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 +__GNUC_PATCHLEVEL__)
  #if GCC_VERSION < 40400
  # error GCC 4.4 or newer is needed for C11 anonymous structs and unions

@@ -49,8 +49,6 @@ typedef struct
     unsigned bitness;
 } Constant;
 
-typedef 
-
 typedef struct Variable
 {
     char *name;
@@ -71,8 +69,6 @@ typedef struct Variable
 
     VariableType type;
 } Variable;
-
-typedef 
 
 typedef struct VL
 {
