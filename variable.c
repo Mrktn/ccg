@@ -94,13 +94,7 @@ void copyVariableList(VariableList *src, VariableList **dest)
     VariableList *v;
 
     foreach(v, src)
-    {
-        Variable *var = xmalloc(sizeof(*var));
-
-        /* OK. We make a copy of the variable, but no need to duplicate its name */
-        memcpy(var, v->variable, sizeof(*var));
-        addVariableToList(var, dest);
-    }
+        addVariableToList(v->variable, dest);
 }
 
 size_t numVariablesInScope(VariableList *scope)
