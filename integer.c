@@ -28,23 +28,23 @@ char const * const inttype2str[_inttypemax] = {"int8_t", "uint8_t", "int16_t", "
 
 static char *makeIntegerName(IntegerType type, VariableList *scope)
 {
-	char buffer[16] = {0}, *ret;
+    char buffer[16] = {0}, *ret;
 
-	sprintf(buffer, "%s_%zu", inttype2varid[type], numVariablesInScope(scope));
-	ret = xmalloc(strlen(buffer) + 1);
-	strcpy(ret, buffer);
+    sprintf(buffer, "%s_%zu", inttype2varid[type], numVariablesInScope(scope));
+    ret = xmalloc(strlen(buffer) + 1);
+    strcpy(ret, buffer);
 
-	return ret;
+    return ret;
 }
 
 void makeInteger(Variable *var, VariableList *scope)
 {
-	var->intvar.type = rand() % _inttypemax;
+    var->intvar.type = rand() % _inttypemax;
     var->intvar.initializer = makeIntegerConstant(INTEGERTYPE_SIZE(var->intvar.type));
     var->name = makeIntegerName(var->intvar.type, scope);
 }
 
 void printIntegerDecl(Variable *var)
 {
-	printf("%s %s = %s;\n", inttype2str[var->intvar.type], var->name, var->intvar.initializer.value);
+    printf("%s %s = %s;\n", inttype2str[var->intvar.type], var->name, var->intvar.initializer.value);
 }

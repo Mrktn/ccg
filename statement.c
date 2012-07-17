@@ -159,9 +159,8 @@ static void buildPtrAssignment(Statement *statement, VariableList *scope, unsign
     pas->lhs = selectVariable(scope, _pointer);
 
     do
-    {
         v = selectVariable(scope, _randomvartype);
-    } while(!PTRASSIGNMENT_IS_CONSISTENT(pas->lhs, v));
+    while(!PTRASSIGNMENT_IS_CONSISTENT(pas->lhs, v));
 
     pas->rhs = v;
 
@@ -199,10 +198,10 @@ static void printForStatement(Statement *statement)
 {
     ForStatement *forstatement = statement->stmnt.forstatement;
     char *id = USABLE_ID(forstatement->iterator);
-    
-    printf("for(%s = %d; %s %s %d; %s %s %d)\n", id, forstatement->init, 
-        id, testop2str[forstatement->testop], forstatement->testval,
-        id, assignop2str[forstatement->assignop], forstatement->incval);
+
+    printf("for(%s = %d; %s %s %d; %s %s %d)\n", id, forstatement->init,
+           id, testop2str[forstatement->testop], forstatement->testval,
+           id, assignop2str[forstatement->assignop], forstatement->incval);
 
     printBlock(forstatement->body);
 }

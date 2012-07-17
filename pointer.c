@@ -27,40 +27,40 @@
 
 static char *makePointerName(VariableList *scope)
 {
-	char *ret, buff[16];
+    char *ret, buff[16];
 
-	sprintf(buff, "ptr_%zu", numVariablesInScope(scope));
-	ret = xmalloc(strlen(buff) + 1);
-	strcpy(ret, buff);
+    sprintf(buff, "ptr_%zu", numVariablesInScope(scope));
+    ret = xmalloc(strlen(buff) + 1);
+    strcpy(ret, buff);
 
-	return ret;
+    return ret;
 }
 
 void makePointer(Variable *var, VariableList *scope)
 {
-	var->pointer.pointed = pickPointableVariable(scope);
-	var->name = makePointerName(scope);
+    var->pointer.pointed = pickPointableVariable(scope);
+    var->name = makePointerName(scope);
 }
 
 Variable *pickPointableVariable(VariableList *scope)
 {
-	VariableList *v;
-	Variable *ret = NULL;
-	size_t n = numVariablesInScope(scope);
+    VariableList *v;
+    Variable *ret = NULL;
+    size_t n = numVariablesInScope(scope);
 
-	do
-	{
-		size_t t = rand() % n, i = 0;
+    do
+    {
+        size_t t = rand() % n, i = 0;
 
-		foreach(v, scope)
-		{
-			if(i++ == t)
-				ret = v->variable;
-		}
+        foreach(v, scope)
+        {
+            if(i++ == t)
+                ret = v->variable;
+        }
 
-	} while(VARIABLE_IS_NOT_POINTABLE(ret));
+    } while(VARIABLE_IS_NOT_POINTABLE(ret));
 
-	return ret;
+    return ret;
 }
 
 inline size_t pointerDepth(Variable *var)
@@ -69,8 +69,8 @@ inline size_t pointerDepth(Variable *var)
 
     while(var->type == _pointer)
     {
-    	++n;
-    	var = var->pointer.pointed;
+        ++n;
+        var = var->pointer.pointed;
     }
 
     return n;
@@ -78,13 +78,13 @@ inline size_t pointerDepth(Variable *var)
 
 inline bool pointersInScope(VariableList *scope)
 {
-	VariableList *v;
+    VariableList *v;
 
-	foreach(v, scope)
-		if(v->variable->type == _pointer)
-			return true;
+    foreach(v, scope)
+        if(v->variable->type == _pointer)
+            return true;
 
-	return false;
+    return false;
 }
 
 /* This function goes through all the pointers to find the type of the ultimately pointed integer ! */
@@ -98,27 +98,27 @@ IntegerType ultimateType(Variable *var)
 
 char *maxDerefdPointer(Variable *var)
 {
-	static char buffer[32];
-	size_t i, depth = pointerDepth(var);
+    static char buffer[32];
+    size_t i, depth = pointerDepth(var);
 
-	memset(buffer, 0, sizeof(buffer));
+    memset(buffer, 0, sizeof(buffer));
 
-	for(i = 0; i < depth; ++i)
-		buffer[i] = '*';
+    for(i = 0; i < depth; ++i)
+        buffer[i] = '*';
 
-	strcat(buffer, var->name);
+    strcat(buffer, var->name);
 
-	return buffer;
+    return buffer;
 }
 
 void printPointerDecl(Variable *var)
 {
-	size_t i, depth = pointerDepth(var);
+    size_t i, depth = pointerDepth(var);
 
-	printf("%s ", inttype2str[ultimateType(var)]);
+    printf("%s ", inttype2str[ultimateType(var)]);
 
-	for(i = 0; i < depth; ++i)
-		putchar('*');
+    for(i = 0; i < depth; ++i)
+        putchar('*');
 
-	printf("%s = &%s;\n", var->name, var->pointer.pointed->name);
+    printf("%s = &%s;\n", var->name, var->pointer.pointed->name);
 }
