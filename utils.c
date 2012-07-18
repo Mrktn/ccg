@@ -23,6 +23,10 @@
 
 #include "ccg.h"
 
+#ifdef DEBUG_MEMORY
+unsigned long long int allocated_bytes = 0;
+#endif
+
 void die(const char *format, ...)
 {
     va_list vargs;
@@ -38,6 +42,10 @@ void *xmalloc(size_t size)
 {
     void *ptr = malloc(size);
 
+#ifdef DEBUG_MEMORY
+    allocated_bytes += size;
+#endif
+
     if(!ptr)
         die("cannot allocate memory !");
 
@@ -47,6 +55,10 @@ void *xmalloc(size_t size)
 void *xcalloc(size_t nmemb, size_t size)
 {
     void *ptr = calloc(nmemb, size);
+
+#ifdef DEBUG_MEMORY
+    allocated_bytes += nmemb * size;
+#endif
 
     if(!ptr)
         die("cannot allocate memory !");

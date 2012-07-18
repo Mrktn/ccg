@@ -25,6 +25,10 @@
 
 Program program;
 
+#ifdef DEBUG_MEMORY
+extern unsigned long long int allocated_bytes;
+#endif
+
 /* TODO: make it portable across Windows */
 static unsigned getseed(void)
 {
@@ -95,6 +99,10 @@ int main(int argc, char **argv)
     makeGlobalVariables();
     makeFunction(false);
     printProgram();
+
+#ifdef DEBUG_MEMORY
+    fprintf(stderr, "Allocated bytes : %llu.\n", allocated_bytes);
+#endif
 
     return EXIT_SUCCESS;
 }
