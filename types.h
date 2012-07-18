@@ -43,6 +43,7 @@ typedef enum {_integer, _pointer, _vartypemax, _randomvartype = 42} VariableType
 
 typedef uint8_t Permissions;
 
+#pragma pack(4)
 typedef struct
 {
     char *value;
@@ -52,7 +53,7 @@ typedef struct
 typedef struct Variable
 {
     char *name;
-    
+
     union
     {
         struct IntegerVariable
