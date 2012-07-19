@@ -56,12 +56,16 @@ static void setopt(int index)
         &cmdline.max_statements_per_block, &cmdline.max_expression_nesting, &cmdline.max_block_nesting, &cmdline.max_pointer_depth
     };
 
-    if(index >= 0 && index <= 6)
+    if(index >= 0 && index <= 7)
         *(index2member[index]) = strtol(optarg, NULL, 10);
-    else if(index == 7)
-        printHelp();
     else if(index == 8)
+        printHelp();
+    else if(index == 9)
         printVersion();
+
+    /* Sanity check */
+    if(cmdline.max_pointer_depth == 0)
+        die("the maximum pointer depth can't be 0 !");
 }
 
 void processCommandline(int argc, char **argv)
@@ -77,6 +81,7 @@ void processCommandline(int argc, char **argv)
         {"max-statements-per-block", required_argument, NULL, 0},
         {"max-expression-nesting", required_argument, NULL, 0},
         {"max-block-nesting", required_argument, NULL, 0},
+        {"max-pointer-depth", required_argument, NULL, 0},
         {"help", no_argument, NULL, 0},
         {"version", no_argument, NULL, 0},
         {NULL, 0, NULL, 0}
