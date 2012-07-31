@@ -81,10 +81,26 @@ inline bool pointersInScope(VariableList *scope)
     VariableList *v;
 
     foreach(v, scope)
+    {
         if(v->variable->type == _pointer)
             return true;
+    }
 
     return false;
+}
+
+size_t numPointersInScope(VariableList *scope)
+{
+    size_t i = 0;
+    VariableList *v;
+
+    foreach(v, scope)
+    {
+        if(v->variable->type == _pointer)
+            ++i;
+    }
+
+    return i;
 }
 
 /* This function goes through all the pointers to find the type of the ultimately pointed integer ! */

@@ -99,6 +99,7 @@ size_t numVariablesInScope(VariableList*);
 void makePointer(Variable*, VariableList*);
 Variable *pickPointableVariable(VariableList*);
 size_t pointerDepth(Variable*);
+size_t numPointersInScope(VariableList*);
 bool pointersInScope(VariableList*);
 char *maxDerefdPointer(Variable*);
 void printPointerDecl(Variable*);
@@ -106,6 +107,7 @@ void printPointerDecl(Variable*);
 /* Integer */
 void makeInteger(Variable*, VariableList*);
 bool writeableIntegersExist(VariableList*);
+size_t numIntegersInScope(VariableList*);
 void printIntegerDecl(Variable*);
 
 /* Function */

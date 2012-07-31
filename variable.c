@@ -110,22 +110,24 @@ size_t numVariablesInScope(VariableList *scope)
 /* Pick a variable from the `scope' which is of type `type' */
 Variable *selectVariable(VariableList *scope, VariableType type)
 {
-    Variable *ret;
     VariableList *v;
-    size_t n = numVariablesInScope(scope);
+    size_t n, t = 0;
 
-    do
+    if(type == _randomvartype)
+        n = rand() % numVariablesInScope(scope);
+    else
+        n = rand() % (type == _integer ? numIntegersInScope(scope) : numPointersInScope(scope));
+
+    foreach(v, scope)
     {
-        size_t i = 0, t = rand() % n + 1;
+        if(v->variable->type == type || type == _randomvartype)
+            if((++t - 1) == n)
+                return v->variable;
+    }
 
-        foreach(v, scope)
-        {
-            if(++i == t)
-                ret = v->variable;
-        }
-    } while((type == _randomvartype ? 0 : type != ret->type));
+    die("unreachable");
 
-    return ret;
+    return NULL;
 }
 
 void makeGlobalVariables(void)

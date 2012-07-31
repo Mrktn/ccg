@@ -1,7 +1,6 @@
 CC=clang
 
-CFLAGS=-c -DDEBUG_MEMORY -O3 -fomit-frame-pointer -pipe -Wall -Wextra -std=c11
-
+CFLAGS=-c -O3 -fomit-frame-pointer -pipe -Wall -Wextra -std=c11
 LDFLAGS=-lm
 
 SOURCES=$(wildcard *.c)
