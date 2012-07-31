@@ -121,7 +121,7 @@ Variable *selectVariable(VariableList *scope, VariableType type)
     foreach(v, scope)
     {
         if(v->variable->type == type || type == _randomvartype)
-            if((++t - 1) == n)
+            if(t++ == n)
                 return v->variable;
     }
 
