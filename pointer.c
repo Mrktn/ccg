@@ -115,12 +115,10 @@ IntegerType ultimateType(Variable *var)
 char *maxDerefdPointer(Variable *var)
 {
     static char buffer[32];
-    size_t i, depth = pointerDepth(var);
+    size_t depth = pointerDepth(var);
 
-    memset(buffer, 0, sizeof(buffer));
-
-    for(i = 0; i < depth; ++i)
-        buffer[i] = '*';
+    memset(buffer, '*', depth);
+    buffer[depth] = 0;
 
     strcat(buffer, var->name);
 

@@ -70,12 +70,9 @@ void *xcalloc(size_t nmemb, size_t size)
 char *genStars(size_t n)
 {
     static char stars[16];
-    size_t i;
 
-    memset(stars, 0, sizeof(stars));
-
-    for(i = 0; i < n; ++i)
-        stars[i] = '*';
+    memset(stars, '*', n);
+    stars[n] = 0;
 
     return stars;
 }
