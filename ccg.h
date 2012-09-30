@@ -52,9 +52,9 @@
 
 #define foreach(v, t) for((v = (t)); (v); (v = v->next))
 
-#define INTEGERTYPE_SIZE(type) ((type == _i8 || type == _u8 ? 8 : (type == _i16 || type == _u16 ? 16 : 32)))
+#define INTEGERTYPE_SIZE(type) ((type == _i8 || type == _u8 ? 8 : (type == _i16 || type == _u16 ? 16 : (type == _i32 || type == _u32 ? 32 : 64))))
 
-#define IS_UNSIGNED_INTEGERTYPE(type) (type == _u8 || type == _u16 || type == _u32)
+#define IS_UNSIGNED_INTEGERTYPE(type) (type == _u8 || type == _u16 || type == _u32 || type == _u64)
 
 #define RANDOM_BITNESS (8 * pow(2, rand() % 3))
 

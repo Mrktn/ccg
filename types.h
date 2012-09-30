@@ -28,7 +28,7 @@ typedef int bool;
 #define true  1
 #define false 0
 
-typedef enum {_i8, _u8, _i16, _u16, _i32, _u32, _inttypemax} IntegerType;
+typedef enum {_i8, _u8, _i16, _u16, _i32, _u32, _i64, _u64, _inttypemax} IntegerType;
 typedef enum {_if, _for, _functioncall, _return, _assignment, _ptrassignment, _statementtypemax} StatementType;
 typedef enum {_variable, _constant, _operandtypemax, _none = 42} OperandType;
 typedef enum {_equal, _lowerorequal, _greaterorequal, _lower, greater, _different, _testopmax} TestOp;

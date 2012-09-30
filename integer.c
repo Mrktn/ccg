@@ -23,12 +23,12 @@
 
 #include "ccg.h"
 
-static char const * const inttype2varid[_inttypemax] = {"c", "uc", "s", "us", "i", "ui"};
-char const * const inttype2str[_inttypemax] = {"int8_t", "uint8_t", "int16_t", "uint16_t", "int32_t", "uint32_t"};
+static char const * const inttype2varid[_inttypemax] = {"c", "uc", "s", "us", "i", "ui", "li", "uli"};
+char const * const inttype2str[_inttypemax] = {"int8_t", "uint8_t", "int16_t", "uint16_t", "int32_t", "uint32_t", "int64_t", "uint64_t"};
 
 static char *makeIntegerName(IntegerType type, VariableList *scope)
 {
-    char buffer[16] = {0}, *ret;
+    char buffer[32] = {0}, *ret;
 
     sprintf(buffer, "%s_%zu", inttype2varid[type], numVariablesInScope(scope));
     ret = xmalloc(strlen(buffer) + 1);
