@@ -17,6 +17,7 @@ Clang
  * (07/19/12) http://llvm.org/bugs/show_bug.cgi?id=13402 (fixed)
  * (10/19/12) http://llvm.org/bugs/show_bug.cgi?id=14131 (fixed)
  * (10/19/12) http://llvm.org/bugs/show_bug.cgi?id=14132
+ * (10/20/12) http://llvm.org/bugs/show_bug.cgi?id=14133
 
 GCC
 
