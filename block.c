@@ -1,4 +1,4 @@
-/** C Code Generator
+/* C Code Generator
  *
  * Copyright (C) 2012, Antoine Balestrat <antoine.balestrat@gmail.com>
  *
