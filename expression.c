@@ -1,6 +1,6 @@
 /* C Code Generator
  *
- * Copyright (C) 2012, Antoine Balestrat <merkil@savhon.org>
+ * Copyright (C) 2012, Antoine Balestrat <antoine.balestrat@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
