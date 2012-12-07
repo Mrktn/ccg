@@ -29,8 +29,9 @@ GCC
  * (10/21/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55010 (fixed)
  * (10/21/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55011 (fixed)
  * (10/28/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55107
- * (10/28/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55110
+ * (10/28/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55110 (fixed)
  * (10/28/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55111 (fixed)
- * (10/29/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55122
+ * (10/29/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55122 (fixed)
  * (10/29/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55124 (fixed)
  * (11/03/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55191 (fixed)
+ * (11/24/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55277 (fixed)
