@@ -61,7 +61,7 @@
 #define USABLE_ID(var) (var->type == _pointer ? maxDerefdPointer(var) : var->name)
 
 
-#define CCG_VERSION "0.2"
+#define CCG_VERSION "0.3"
 
 extern CommandlineOpt cmdline;
 extern Program program;
@@ -70,7 +70,7 @@ extern char const * const testop2str[_testopmax];
 extern char const * const arithop2str[_arithopmax];
 extern char const * const assignop2str[_assignopmax];
 
-/* Commandline proccessing */
+/* Commandline processing */
 void processCommandline(int, char**);
 
 /* Utils */
