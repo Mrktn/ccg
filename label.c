@@ -23,38 +23,50 @@
 
 #include "ccg.h"
 
-static const char *hexdigits = "0123456789ABCDEF";
-
-char *makeHexadecimalValue(unsigned digitNumber)
+void addLabelToList(Label *label, LabelList **list)
 {
-    size_t i;
-    char *ret = xcalloc(digitNumber + 1, 1);
+    if(!*list)
+    {
+        *list = xmalloc(sizeof(*list));
+        (*list)->label = label;
+        (*list)->next = NULL;
+    }
 
-    for(i = 0; i < digitNumber; ++i)
-        ret[i] = hexdigits[rand() % 16];
+    else
+    {
+        LabelList *v;
+
+        for(v = *list; v->next; v = v->next);
+        v->next = xmalloc(sizeof(v->next));
+        v->next->label = label;
+        v->next->next = NULL;
+    }
+}
+
+Label *makeLabel(Context *context)
+{
+    Label *ret = xmalloc(sizeof(*ret));
+
+    ret->name = xmalloc(12);
+    sprintf(ret->name, "lbl%s", makeHexadecimalValue(8));
+    context->currfunc->numlabels++;
+
+    addLabelToList(ret, &context->currfunc->labels);
 
     return ret;
 }
 
-/* For now, the generated integers are strictly positive */
-Constant *makeIntegerConstant(unsigned bits)
+Label *selectLabel(Context *context)
 {
-    Constant *ret = xmalloc(sizeof(*ret));
-    char *hexvalue = ((rand() % 3) ? makeHexadecimalValue(bits / 4) : "0"); /* 30% of the time, a zero is generated */
+    unsigned n = rand() % context->currfunc->numlabels, c = 0;
+    LabelList *l;
 
-    ret->value   = xcalloc(4 + strlen(hexvalue), 1);
-    ret->bitness = bits;
+    foreach(l, context->currfunc->labels)
+    {
+        if(l->label && c++ == n)
+            return l->label;
+    }
 
-    sprintf(ret->value, "0x%s", hexvalue);
-
-    if(strlen(hexvalue) > 1)
-        free(hexvalue);
-
-    return ret;
-}
-
-void printConstant(Constant *constant)
-{
-    fputs(constant->value, stdout);
-    /* And... we are done. */
+    die("unreachable !");
+    return NULL;
 }

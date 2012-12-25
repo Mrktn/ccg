@@ -81,7 +81,8 @@ void *xcalloc(size_t, size_t);
 char *genStars(size_t n);
 
 /* Constant */
-Constant makeIntegerConstant(unsigned);
+char *makeHexadecimalValue(unsigned);
+Constant *makeIntegerConstant(unsigned);
 void printConstant(Constant*);
 
 /* Variable */
@@ -116,12 +117,12 @@ void printFunction(Function*);
 void printFunctionPrototype(Function*);
 
 /* Block */
-Block *makeBlock(VariableList*, unsigned);
+Block *makeBlock(Context*, unsigned);
 void printBlock(Block*);
 
 /* Statement */
 void addStatementToList(Statement*, StatementList**);
-Statement *makeStatement(VariableList*, unsigned);
+Statement *makeStatement(Context*, unsigned, bool);
 void printStatement(Statement*);
 
 /* Operand */
@@ -131,5 +132,9 @@ Operand *selectOperand(VariableList*);
 void addExpressionToList(Expression*, ExpressionList**);
 Expression *makeExpression(VariableList*, unsigned);
 void printExpression(Expression*);
+
+/* Label */
+Label *makeLabel(Context*);
+Label *selectLabel(Context*);
 
 #endif

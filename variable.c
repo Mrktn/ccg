@@ -126,7 +126,6 @@ Variable *selectVariable(VariableList *scope, VariableType type)
     }
 
     die("unreachable");
-
     return NULL;
 }
 

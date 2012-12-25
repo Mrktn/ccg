@@ -23,31 +23,26 @@
 
 #include "ccg.h"
 
-/*
-    - If: 20%
-    - For: 20%
-    - Pointer Assignment : 10%
-    - Assignment: 20%
-    - Function call: 20%
-    - Return: 10%
-*/
-static const StatementType statarray[10] = {_if, _if, _for, _for, _assignment, _assignment, _ptrassignment, _functioncall, _functioncall, _return};
 
-static void buildIf(Statement*, VariableList*, unsigned);
-static void buildFor(Statement*, VariableList*, unsigned);
-static void buildAssignment(Statement*, VariableList*, unsigned);
-static void buildPtrAssignment(Statement*, VariableList*, unsigned);
-static void buildFunctionCall(Statement*, VariableList*, unsigned);
-static void buildReturn(Statement*, VariableList*, unsigned);
+static const StatementType statarray[20] = {_if, _if, _if, _if, _for, _for, _for, _for, _assignment, _assignment, _assignment, _assignment, _ptrassignment, _ptrassignment, _ptrassignment, _functioncall, _functioncall, _functioncall, _goto, _return};
 
-static void (*buildfunctions[_statementtypemax])(Statement*, VariableList*, unsigned) =
+static void buildIf(Statement*, Context*, unsigned);
+static void buildFor(Statement*, Context*, unsigned);
+static void buildAssignment(Statement*, Context*, unsigned);
+static void buildPtrAssignment(Statement*, Context*, unsigned);
+static void buildFunctionCall(Statement*, Context*, unsigned);
+static void buildReturn(Statement*, Context*, unsigned);
+static void buildGoto(Statement*, Context*, unsigned);
+
+static void (*buildfunctions[_statementtypemax])(Statement*, Context*, unsigned) =
 {
     [_if] = buildIf,
     [_for] = buildFor,
     [_assignment] = buildAssignment,
     [_ptrassignment] = buildPtrAssignment,
     [_functioncall] = buildFunctionCall,
-    [_return] = buildReturn
+    [_return] = buildReturn,
+    [_goto] = buildGoto
 };
 
 void addStatementToList(Statement *statement, StatementList **list)
@@ -70,20 +65,27 @@ void addStatementToList(Statement *statement, StatementList **list)
     }
 }
 
-#define IS_INVALID ((type == _return && !nesting)\
+#define IS_INVALID ((type == _ptrassignment && !(pointersInScope(context->scope)))\
                     || (type == _functioncall && program.numfunctions >= cmdline.max_functions)\
-                    || (type == _ptrassignment && !(pointersInScope(scope))))
+                    || (type == _return && (!nesting || !lastofblock))\
+                    || (type == _goto && (cmdline.nojumps || (context->currfunc->numlabels == 0))))
 
-Statement *makeStatement(VariableList *scope, unsigned nesting)
+Statement *makeStatement(Context *context, unsigned nesting, bool lastofblock)
 {
     Statement *ret = xmalloc(sizeof(*ret));
     StatementType type;
 
     do
-        type = statarray[rand() % 10];
+        type = statarray[rand() % (sizeof(statarray) / sizeof(*statarray))];
     while(IS_INVALID);
 
-    (buildfunctions[(ret->type = type)])(ret, scope, nesting);
+    /* 2% of chance to put a label */
+    if(!cmdline.nojumps && type != _goto && !(rand() % 50))
+        ret->label = makeLabel(context);
+    else
+        ret->label = NULL;
+
+    (buildfunctions[(ret->type = type)])(ret, context, nesting);
 
     return ret;
 }
@@ -91,40 +93,39 @@ Statement *makeStatement(VariableList *scope, unsigned nesting)
 
 /***** Build functions *****/
 
-static void buildIf(Statement *statement, VariableList *scope, unsigned nesting)
+static void buildIf(Statement *statement, Context *context, unsigned nesting)
 {
     IfStatement *ifstatement = xmalloc(sizeof(*ifstatement));
 
-    ifstatement->condition = makeExpression(scope, 0);
-    ifstatement->truepath = makeBlock(scope, nesting + 1);
+    ifstatement->condition = makeExpression(context->scope, 0);
+    ifstatement->truepath = makeBlock(context, nesting + 1);
 
     /* An else branch is generated 30% of the time */
-    ifstatement->falsepath = !(rand() % 3) ? makeBlock(scope, nesting + 1) : NULL;
+    ifstatement->falsepath = !(rand() % 3) ? makeBlock(context, nesting + 1) : NULL;
 
     statement->stmnt.ifstatement = ifstatement;
 }
 
-static void buildFor(Statement *statement, VariableList *scope, unsigned nesting)
+static void buildFor(Statement *statement, Context *context, unsigned nesting)
 {
     ForStatement *forstatement = xmalloc(sizeof(*forstatement));
 
-    forstatement->iterator = selectVariable(scope, _randomvartype);
+    forstatement->iterator = selectVariable(context->scope, _randomvartype);
 
     /* The init var is in [-30;0[ u ]0;30] and the test val is in [30;89] */
     forstatement->init = (rand() % 30 + 1) * ((forstatement->iterator->type == _integer ? IS_UNSIGNED_INTEGERTYPE(forstatement->iterator->intvar.type) : IS_UNSIGNED_INTEGERTYPE(ultimateType(forstatement->iterator))) ? 1 : ((rand() % 2) ? -1 : 1));
     forstatement->testval = (rand() % 60 + 30);
 
-    /* TODO: we should produce more types of loops */
     forstatement->testop = _lowerorequal;
     forstatement->incval = 1;
     forstatement->assignop = _assigninc;
 
-    forstatement->body = makeBlock(scope, nesting + 1);
+    forstatement->body = makeBlock(context, nesting + 1);
 
     statement->stmnt.forstatement = forstatement;
 }
 
-static void buildFunctionCall(Statement *statement, VariableList *scope, unsigned nesting)
+static void buildFunctionCall(Statement *statement, Context *context, unsigned nesting)
 {
     FunctionCallStatement *funccallstatement = xmalloc(sizeof(*funccallstatement));
     funccallstatement->paramlist = NULL;
@@ -133,33 +134,33 @@ static void buildFunctionCall(Statement *statement, VariableList *scope, unsigne
     funccallstatement->function = makeFunction(true);
 
     foreach(v, funccallstatement->function->paramlist)
-        addExpressionToList(makeExpression(scope, nesting + 1), (ExpressionList**) &funccallstatement->paramlist);
+        addExpressionToList(makeExpression(context->scope, nesting + 1), (ExpressionList**) &funccallstatement->paramlist);
 
     statement->stmnt.funccallstatement = funccallstatement;
 }
 
-static void buildAssignment(Statement *statement, VariableList *scope, unsigned nesting)
+static void buildAssignment(Statement *statement, Context *context, unsigned nesting)
 {
     AssignmentStatement *as = xmalloc(sizeof(*as));
 
-    as->var = selectVariable(scope, _randomvartype);
+    as->var = selectVariable(context->scope, _randomvartype);
     as->op = rand() % _assignopmax /*_assign*/;
-    as->expr = makeExpression(scope, 0);
+    as->expr = makeExpression(context->scope, 0);
 
     statement->stmnt.assignmentstatement = as;
 }
 
 #define PTRASSIGNMENT_IS_CONSISTENT(lhs, rhs) (INTEGERTYPE_SIZE(ultimateType(lhs)) <= INTEGERTYPE_SIZE(ultimateType(rhs)))
 
-static void buildPtrAssignment(Statement *statement, VariableList *scope, unsigned nesting)
+static void buildPtrAssignment(Statement *statement, Context *context, unsigned nesting)
 {
     Variable *v;
     PtrAssignmentStatement *pas = xmalloc(sizeof(*pas));
 
-    pas->lhs = selectVariable(scope, _pointer);
+    pas->lhs = selectVariable(context->scope, _pointer);
 
     do
-        v = selectVariable(scope, _randomvartype);
+        v = selectVariable(context->scope, _randomvartype);
     while(!PTRASSIGNMENT_IS_CONSISTENT(pas->lhs, v));
 
     pas->rhs = v;
@@ -167,15 +168,23 @@ static void buildPtrAssignment(Statement *statement, VariableList *scope, unsign
     statement->stmnt.ptrassignmentstatement = pas;
 }
 
-static void buildReturn(Statement *statement, VariableList *scope, unsigned nesting)
+static void buildReturn(Statement *statement, Context *context, unsigned nesting)
 {
     ReturnStatement *rs = xmalloc(sizeof(*rs));
 
-    rs->retval = selectOperand(scope);
+    rs->retval = selectOperand(context->scope);
 
     statement->stmnt.returnstatement = rs;
 }
 
+static void buildGoto(Statement *statement, Context *context, unsigned nesting)
+{
+    GotoStatement *gs = xmalloc(sizeof(*gs));
+
+    gs->label = selectLabel(context);
+
+    statement->stmnt.gotostatement = gs;
+}
 
 
 static void printIfStatement(Statement *statement)
@@ -258,7 +267,12 @@ static void printReturnStatement(Statement *statement)
 {
     Operand *retval = statement->stmnt.returnstatement->retval;
 
-    printf("return %s;\n", retval->type == _variable ? USABLE_ID(retval->op.variable) : retval->op.constant.value);
+    printf("return %s;\n", retval->type == _variable ? USABLE_ID(retval->op.variable) : retval->op.constant->value);
+}
+
+static void printGotoStatement(Statement *statement)
+{
+    printf("goto %s;\n", statement->stmnt.gotostatement->label->name);
 }
 
 void printStatement(Statement *statement)
@@ -270,8 +284,12 @@ void printStatement(Statement *statement)
         [_return] = printReturnStatement,
         [_assignment] = printAssignmentStatement,
         [_ptrassignment] = printPtrAssignmentStatement,
-        [_functioncall] = printFunctionCallStatement
+        [_functioncall] = printFunctionCallStatement,
+        [_goto] = printGotoStatement
     };
+
+    if(statement->label)
+        printf("%s:\n", statement->label->name);
 
     (printfunctions[statement->type])(statement);
 }

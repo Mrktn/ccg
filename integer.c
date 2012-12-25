@@ -60,5 +60,5 @@ size_t numIntegersInScope(VariableList *scope)
 
 void printIntegerDecl(Variable *var)
 {
-    printf("%s %s = %s;\n", inttype2str[var->intvar.type], var->name, var->intvar.initializer.value);
+    printf("%s %s = %s;\n", inttype2str[var->intvar.type], var->name, var->intvar.initializer->value);
 }

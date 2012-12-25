@@ -1,6 +1,6 @@
 CC=clang
 
-CFLAGS=-c -O3 -fomit-frame-pointer -pipe -Wall -Wextra -std=c11
+CFLAGS=-c -g -pipe -Wall -Wextra -std=c11
 LDFLAGS=-lm
 
 SOURCES=$(wildcard *.c)

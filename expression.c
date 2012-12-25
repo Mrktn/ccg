@@ -31,7 +31,7 @@
     - Assignment: 20%
     - Operand: 20%
 */
-static const ExpressionType exprarray[10] = {_ternaryexpr, _functioncallexpr, _operationexpr, _operationexpr, _testexpr, _testexpr, _assignmentexpr, _assignmentexpr};
+static const ExpressionType exprarray[10] = {_ternaryexpr, _functioncallexpr, _functioncallexpr, _operationexpr, _operationexpr, _operationexpr, _testexpr, _testexpr, _assignmentexpr, _assignmentexpr};
 
 char const * const testop2str[_testopmax] = {"==", "<=", ">=", "<", ">", "!="};
 char const * const arithop2str[_arithopmax] = {"+", "-", "/", "*"};
@@ -88,7 +88,7 @@ Expression *makeExpression(VariableList *scope, unsigned nesting)
     else
     {
         do
-            expression->type = exprarray[rand() % 10];
+            expression->type = exprarray[rand() % (sizeof(exprarray) / sizeof(*exprarray))];
         while(EXPRESSION_IS_INVALID(expression->type));
     }
 
@@ -173,7 +173,7 @@ static void printOperand(Operand *op)
     if(op->type == _variable)
         fputs(USABLE_ID(op->op.variable), stdout);
     else
-        printConstant(&op->op.constant);
+        printConstant(op->op.constant);
 }
 
 void printTest(struct TestExpression *te)

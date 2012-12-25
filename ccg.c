@@ -29,7 +29,6 @@ Program program;
 extern unsigned long long int allocated_bytes;
 #endif
 
-/* TODO: make it portable across Windows */
 static unsigned getseed(void)
 {
     unsigned seed;
@@ -58,6 +57,7 @@ static void init(void)
     cmdline.max_block_nesting = 7;
     cmdline.max_pointer_depth = 2;
     cmdline.seed = getseed();
+    cmdline.nojumps = false;
 }
 
 static void printProgram(void)

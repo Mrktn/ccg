@@ -24,40 +24,41 @@
 #include "ccg.h"
 
 /* `nesting' is the nesting level of the block. func(){0 {1} {1 {2}}} */
-Block *makeBlock(VariableList *pscope, unsigned nesting)
+Block *makeBlock(Context *context, unsigned nesting)
 {
-    size_t i;
-    Block *ret = xmalloc(sizeof(Block));
-    VariableList *scope = NULL;
+    size_t i, numlocalvars, numstatements;
+    Block *ret = xmalloc(sizeof(*ret));
 
-    /* Make a copy of the list of the currently usable variables.
-    This way, we will be able to add variables in a clean list without corrupting the one that's been passed by parameters */
-    copyVariableList(pscope, &scope);
+    Context *bcontext = xmalloc(sizeof(*bcontext));
+    bcontext->currfunc = context->currfunc;
+
+    copyVariableList(context->scope, &bcontext->scope);
 
     ret->localvars = NULL, ret->statementlist = NULL;
-    ret->numlocalvars = ret->numstatements = 0;
 
     /* 1st step: generate some random vars (at least 1 if we are in the body of a function */
-    ret->numlocalvars = rand() % cmdline.max_localvars + !nesting;
+    numlocalvars = rand() % cmdline.max_localvars + !nesting;
 
-    for(i = 0; i < ret->numlocalvars; ++i)
+    for(i = 0; i < numlocalvars; ++i)
     {
-        Variable *tmp = makeVariable(scope, _randomvartype);
+        Variable *tmp = makeVariable(bcontext->scope, _randomvartype);
         addVariableToList(tmp, &(ret->localvars));
-        addVariableToList(tmp, &scope);
+        addVariableToList(tmp, &bcontext->scope);
     }
 
     /* 2nd step: generate some random statements ! */
     if(nesting < cmdline.max_block_nesting)
     {
-        ret->numstatements = rand() % cmdline.max_statements_per_block;
+        numstatements = rand() % cmdline.max_statements_per_block;
 
-        for(i = 0; i < ret->numstatements; ++i)
+        for(i = 0; i < numstatements; ++i)
         {
-            Statement *tmp = makeStatement(scope, nesting);
+            Statement *tmp = makeStatement(bcontext, nesting, !(numstatements - 1 - i));
             addStatementToList(tmp, &ret->statementlist);
         }
     }
+
+    free(bcontext);
 
     return ret;
 }

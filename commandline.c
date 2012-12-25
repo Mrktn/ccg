@@ -39,6 +39,7 @@ static void printHelp(void)
     puts("  --max-expression-nesting\tControl the complexity of the expressions (default 8)");
     puts("  --max-block-nesting\t\tControl the nesting of the blocks (default 7)");
     puts("  --max-pointer-depth\t\tMaximum depth of a pointer (default 2)");
+    puts("  --no-jumps\t\t\tDisables jumps (enabled by default)");
     exit(EXIT_SUCCESS);
 }
 
@@ -59,8 +60,10 @@ static void setopt(int index)
     if(index >= 0 && index <= 7)
         *(index2member[index]) = strtol(optarg, NULL, 10);
     else if(index == 8)
-        printHelp();
+        cmdline.nojumps = true;
     else if(index == 9)
+        printHelp();
+    else if(index == 10)
         printVersion();
 
     /* Sanity check */
@@ -82,6 +85,7 @@ void processCommandline(int argc, char **argv)
         {"max-expression-nesting", required_argument, NULL, 0},
         {"max-block-nesting", required_argument, NULL, 0},
         {"max-pointer-depth", required_argument, NULL, 0},
+        {"no-jumps", no_argument, NULL, 0},
         {"help", no_argument, NULL, 0},
         {"version", no_argument, NULL, 0},
         {NULL, 0, NULL, 0}

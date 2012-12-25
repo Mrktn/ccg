@@ -29,7 +29,7 @@ typedef int bool;
 #define false 0
 
 typedef enum {_i8, _u8, _i16, _u16, _i32, _u32, _i64, _u64, _inttypemax} IntegerType;
-typedef enum {_if, _for, _functioncall, _return, _assignment, _ptrassignment, _statementtypemax} StatementType;
+typedef enum {_if, _for, _functioncall, _return, _assignment, _ptrassignment, _goto, _statementtypemax} StatementType;
 typedef enum {_variable, _constant, _operandtypemax, _none = 42} OperandType;
 typedef enum {_equal, _lowerorequal, _greaterorequal, _lower, greater, _different, _testopmax} TestOp;
 typedef enum {_plus, _minus, _div, _mul, _arithopmax} ArithOp;
@@ -58,7 +58,7 @@ typedef struct Variable
     {
         struct IntegerVariable
         {
-            Constant initializer;
+            Constant *initializer;
             IntegerType type;
         } intvar;
 
@@ -84,7 +84,7 @@ typedef struct
     union
     {
         Variable *variable;
-        Constant constant;
+        Constant *constant;
     } op;
 } Operand;
 
@@ -94,7 +94,6 @@ typedef struct
 
     struct BLCK
     {
-        unsigned numlocalvars, numstatements;
         VariableList *localvars;
 
         struct SL
@@ -143,10 +142,22 @@ typedef struct
 typedef struct
 {
     char *name;
+} Label;
+
+typedef struct LL
+{
+    Label *label;
+    struct LL *next;
+} LabelList;
+
+typedef struct
+{
+    char *name;
     IntegerType returntype;
-    short numparams;
     VariableList *paramlist;
     Block *body;
+    LabelList *labels;
+    short numlabels;
 } Function;
 
 typedef struct
@@ -155,9 +166,15 @@ typedef struct
     void *paramlist; /* ExpressionList *paramlist; */
 } FunctionCallStatement;
 
+typedef struct
+{
+    Label *label;
+} GotoStatement;
+
 typedef struct Stmnt
 {
     StatementType type;
+    Label *label;
 
     union
     {
@@ -168,6 +185,7 @@ typedef struct Stmnt
         AssignmentStatement *assignmentstatement;
         PtrAssignmentStatement *ptrassignmentstatement;
         ReturnStatement *returnstatement;
+        GotoStatement *gotostatement;
     } stmnt;
 } Statement;
 
@@ -181,14 +199,6 @@ typedef struct Expr
 {
     ExpressionType type;
 
-    /*
-    	An expression, here, is something that returns a value. It can be any of:
-    		* A boolean expression, for instance (var == 0x42)
-    		* A ternary expression, for instance (var == var2 ? 0x42 : othervar)
-    		* An arithmetic operation, for instance (var / 3)
-    		* A simple operand, an operand being the simplest item we manipulate (that is to say a variable or a integer constant)
-    		* The value returned by a function call
-    */
     union
     {
         struct TestExpression
@@ -239,11 +249,11 @@ typedef struct EL
     struct EL *next;
 } ExpressionList;
 
-typedef struct
+typedef struct Context
 {
-    Variable **scope;
-    Function *currfunc;
     unsigned nvars;
+    VariableList *scope;
+    Function *currfunc;
 } Context;
 
 typedef struct
@@ -257,4 +267,5 @@ typedef struct
 {
     unsigned seed, max_functions, max_localvars, max_function_parameters, max_statements_per_block,
     max_expression_nesting, max_block_nesting, max_pointer_depth;
+    bool nojumps;
 } CommandlineOpt;

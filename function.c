@@ -23,6 +23,8 @@
 
 #include "ccg.h"
 
+Context context;
+
 void addFunctionToList(Function *function, FunctionList **list)
 {
     if(!*list)
@@ -58,32 +60,39 @@ char *makeFunctionName(void)
 /* At this point, only global variables are available */
 Function *makeFunction(bool params)
 {
-    short i;
-    Function *ret = xmalloc(sizeof(Function));
-    VariableList *scope = params ? NULL : program.globalvars;
+    short i, numparams = 0;
+    Function *ret = xmalloc(sizeof(*ret));
+
+    Context *context = xmalloc(sizeof(*context));
+    context->scope = params ? NULL : program.globalvars;
+    context->currfunc = ret;
 
     ret->paramlist = NULL;
     ret->returntype = rand() % _inttypemax;
     ret->name = makeFunctionName();
-    ret->numparams = params ? rand() % (cmdline.max_function_parameters + 1) : 0;
+    ret->numlabels = 0;
+
+    numparams = params ? rand() % (cmdline.max_function_parameters + 1) : 0;
 
     program.numfunctions++;
 
     if(params)
     {
-        copyVariableList(program.globalvars, &scope);
+        copyVariableList(program.globalvars, &context->scope);
 
-        for(i = 0; i < ret->numparams; ++i)
+        for(i = 0; i < numparams; ++i)
         {
-            Variable *v = makeVariable(scope, _integer);
+            Variable *v = makeVariable(context->scope, _integer);
             addVariableToList(v, &ret->paramlist);
-            addVariableToList(v, &scope);
+            addVariableToList(v, &context->scope);
         }
     }
 
-    ret->body = makeBlock(scope, 0);
+    ret->body = makeBlock(context, 0);
 
     addFunctionToList(ret, &program.functions);
+    free(context);
+
     return ret;
 }
 
