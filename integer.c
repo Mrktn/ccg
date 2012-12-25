@@ -26,37 +26,37 @@
 static char const * const inttype2varid[_inttypemax] = {"c", "uc", "s", "us", "i", "ui", "li", "uli"};
 char const * const inttype2str[_inttypemax] = {"int8_t", "uint8_t", "int16_t", "uint16_t", "int32_t", "uint32_t", "int64_t", "uint64_t"};
 
-static char *makeIntegerName(IntegerType type, VariableList *scope)
+static char *makeIntegerName(IntegerType type, Context *context)
 {
     char buffer[32] = {0}, *ret;
 
-    sprintf(buffer, "%s_%zu", inttype2varid[type], numVariablesInScope(scope));
+    sprintf(buffer, "%s_%u", inttype2varid[type], context->nvars);
     ret = xmalloc(strlen(buffer) + 1);
     strcpy(ret, buffer);
 
     return ret;
 }
 
-void makeInteger(Variable *var, VariableList *scope)
+void makeInteger(Variable *var, Context *context)
 {
     var->intvar.type = rand() % _inttypemax;
     var->intvar.initializer = makeIntegerConstant(INTEGERTYPE_SIZE(var->intvar.type));
-    var->name = makeIntegerName(var->intvar.type, scope);
+    var->name = makeIntegerName(var->intvar.type, context);
 }
 
-size_t numIntegersInScope(VariableList *scope)
+/*size_t numIntegersInScope(Context *context)
 {
     size_t i = 0;
     VariableList *v;
 
-    foreach(v, scope)
+    foreach(v, context->scope)
     {
         if(v->variable->type == _integer)
             ++i;
     }
 
     return i;
-}
+}*/
 
 void printIntegerDecl(Variable *var)
 {

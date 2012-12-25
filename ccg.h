@@ -86,29 +86,25 @@ Constant *makeIntegerConstant(unsigned);
 void printConstant(Constant*);
 
 /* Variable */
-Variable *makeVariable(VariableList*, VariableType);
+Variable *makeVariable(Context*, VariableType);
 void addVariableToList(Variable*, VariableList**);
 void printVariableDecl(Variable*);
 void printVariableType(Variable*);
 void copyVariableList(VariableList*, VariableList**);
-Variable *selectVariable(VariableList*, VariableType);
+Variable *selectVariable(Context*, VariableType);
 void makeGlobalVariables(void);
 IntegerType ultimateType(Variable*);
-size_t numVariablesInScope(VariableList*);
 
 /* Pointer */
-void makePointer(Variable*, VariableList*);
-Variable *pickPointableVariable(VariableList*);
+void makePointer(Variable*, Context*);
+Variable *pickPointableVariable(Context*);
 size_t pointerDepth(Variable*);
-size_t numPointersInScope(VariableList*);
-bool pointersInScope(VariableList*);
 char *maxDerefdPointer(Variable*);
 void printPointerDecl(Variable*);
 
 /* Integer */
-void makeInteger(Variable*, VariableList*);
-bool writeableIntegersExist(VariableList*);
-size_t numIntegersInScope(VariableList*);
+void makeInteger(Variable*, Context*);
+bool writeableIntegersExist(Context*);
 void printIntegerDecl(Variable*);
 
 /* Function */
@@ -126,11 +122,11 @@ Statement *makeStatement(Context*, unsigned, bool);
 void printStatement(Statement*);
 
 /* Operand */
-Operand *selectOperand(VariableList*);
+Operand *selectOperand(Context*);
 
 /* Expression */
 void addExpressionToList(Expression*, ExpressionList**);
-Expression *makeExpression(VariableList*, unsigned);
+Expression *makeExpression(Context*, unsigned);
 void printExpression(Expression*);
 
 /* Label */

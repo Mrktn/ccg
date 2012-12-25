@@ -39,14 +39,14 @@ char const * const bitwiseop2str[_bitwiseopmax] = {"&", "|", "^"};
 char const * const logicalop2str[_logicalopmax] = {"&&", "||"};
 char const * const assignop2str[_assignopmax] = {"+=", "-=", "/=", "*=", "="};
 
-void buildOperand(Expression*, VariableList*, unsigned);
-void buildTernary(Expression *expr, VariableList*, unsigned);
-void buildOperation(Expression*, VariableList*, unsigned);
-void buildTest(Expression*, VariableList*, unsigned);
-void buildAssignment(Expression*, VariableList*, unsigned);
-void buildFunctionCall(Expression*, VariableList*, unsigned);
+void buildOperand(Expression*, Context*, unsigned);
+void buildTernary(Expression *expr, Context*, unsigned);
+void buildOperation(Expression*, Context*, unsigned);
+void buildTest(Expression*, Context*, unsigned);
+void buildAssignment(Expression*, Context*, unsigned);
+void buildFunctionCall(Expression*, Context*, unsigned);
 
-static void (*buildfunctions[_expressiontypemax])(Expression*, VariableList*, unsigned) =
+static void (*buildfunctions[_expressiontypemax])(Expression*, Context*, unsigned) =
 {
     [_operandexpr] = buildOperand,
     [_ternaryexpr] = buildTernary,
@@ -78,7 +78,7 @@ void addExpressionToList(Expression *expression, ExpressionList **list)
 
 #define EXPRESSION_IS_INVALID(t) (((t) == _functioncallexpr && program.numfunctions >= cmdline.max_functions))
 
-Expression *makeExpression(VariableList *scope, unsigned nesting)
+Expression *makeExpression(Context *context, unsigned nesting)
 {
     Expression *expression = xmalloc(sizeof(*expression));
 
@@ -92,41 +92,41 @@ Expression *makeExpression(VariableList *scope, unsigned nesting)
         while(EXPRESSION_IS_INVALID(expression->type));
     }
 
-    (buildfunctions[expression->type])(expression, scope, nesting + 1);
+    (buildfunctions[expression->type])(expression, context, nesting + 1);
 
     return expression;
 }
 
-void buildOperand(Expression *expression, VariableList *scope, unsigned nesting)
+void buildOperand(Expression *expression, Context *context, unsigned nesting)
 {
-    expression->expr.operand = selectOperand(scope);
+    expression->expr.operand = selectOperand(context);
 }
 
-void buildTest(Expression *expression, VariableList *scope, unsigned nesting)
+void buildTest(Expression *expression, Context *context, unsigned nesting)
 {
     struct TestExpression *te = xmalloc(sizeof(*te));
 
     te->op = rand() % _testopmax;
-    te->lefthand = makeExpression(scope, nesting + 1), te->righthand = makeExpression(scope, nesting + 1);
+    te->lefthand = makeExpression(context, nesting + 1), te->righthand = makeExpression(context, nesting + 1);
 
     expression->expr.testexpr = te;
 }
 
-void buildTernary(Expression *expression, VariableList *scope, unsigned nesting)
+void buildTernary(Expression *expression, Context *context, unsigned nesting)
 {
     struct TernaryExpression *te = xmalloc(sizeof(*te));
 
     /* Build the test part of the ternary */
-    te->test = makeExpression(scope, nesting + 1);
-    te->truepath = makeExpression(scope, nesting + 1), te->falsepath = makeExpression(scope, nesting + 1);
+    te->test = makeExpression(context, nesting + 1);
+    te->truepath = makeExpression(context, nesting + 1), te->falsepath = makeExpression(context, nesting + 1);
     expression->expr.ternexpr = te;
 }
 
-void buildOperation(Expression *expression, VariableList *scope, unsigned nesting)
+void buildOperation(Expression *expression, Context *context, unsigned nesting)
 {
     struct OperationExpression *oe = xmalloc(sizeof(*oe));
 
-    oe->lefthand = makeExpression(scope, nesting + 1), oe->righthand = makeExpression(scope, nesting + 1);
+    oe->lefthand = makeExpression(context, nesting + 1), oe->righthand = makeExpression(context, nesting + 1);
     oe->type = rand() % _operationtypemax;
 
     if(oe->type == _arithmetic)
@@ -141,20 +141,20 @@ void buildOperation(Expression *expression, VariableList *scope, unsigned nestin
 
 #define ASSIGNMENT_OP_IS_INVALID(oprtr, left, right) ((((left->type == _double || left->type == _float) || (IS_FLOATING_POINT_VARIABLE(right))) && (oprtr == _assignmod)))
 
-void buildAssignment(Expression *expression, VariableList *scope, unsigned nesting)
+void buildAssignment(Expression *expression, Context *context, unsigned nesting)
 {
     struct AssignmentExpression *ae = xmalloc(sizeof(*ae));
 
-    if(!(ae->lvalue = selectVariable(scope, _randomvartype)))
+    if(!(ae->lvalue = selectVariable(context, _randomvartype)))
         die("you kidding");
 
-    ae->rvalue = makeExpression(scope, nesting + 1);
+    ae->rvalue = makeExpression(context, nesting + 1);
     ae->op = rand() % _assignopmax;
 
     expression->expr.assignexpr= ae;
 }
 
-void buildFunctionCall(Expression *expression, VariableList *scope, unsigned nesting)
+void buildFunctionCall(Expression *expression, Context *context, unsigned nesting)
 {
     struct FunctionCallExpression *fce = xmalloc(sizeof(*fce));
     VariableList *v;
@@ -163,7 +163,7 @@ void buildFunctionCall(Expression *expression, VariableList *scope, unsigned nes
     fce->function = makeFunction(true);
 
     foreach(v, fce->function->paramlist)
-        addExpressionToList(makeExpression(scope, nesting + 1), (ExpressionList**) &fce->paramlist);
+        addExpressionToList(makeExpression(context, nesting + 1), (ExpressionList**) &fce->paramlist);
 
     expression->expr.funccallexpr = fce;
 }

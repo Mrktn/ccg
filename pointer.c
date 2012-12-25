@@ -25,34 +25,33 @@
 
 #define VARIABLE_IS_NOT_POINTABLE(var) (pointerDepth(var) >= cmdline.max_pointer_depth)
 
-static char *makePointerName(VariableList *scope)
+static char *makePointerName(Context *context)
 {
     char *ret, buff[16];
 
-    sprintf(buff, "ptr_%zu", numVariablesInScope(scope));
+    sprintf(buff, "ptr_%u", context->nvars);
     ret = xmalloc(strlen(buff) + 1);
     strcpy(ret, buff);
 
     return ret;
 }
 
-void makePointer(Variable *var, VariableList *scope)
+void makePointer(Variable *var, Context *context)
 {
-    var->pointer.pointed = pickPointableVariable(scope);
-    var->name = makePointerName(scope);
+    var->pointer.pointed = pickPointableVariable(context);
+    var->name = makePointerName(context);
 }
 
-Variable *pickPointableVariable(VariableList *scope)
+Variable *pickPointableVariable(Context *context)
 {
     VariableList *v;
     Variable *ret = NULL;
-    size_t n = numVariablesInScope(scope);
 
     do
     {
-        size_t t = rand() % n, i = 0;
+        size_t t = rand() % context->nvars, i = 0;
 
-        foreach(v, scope)
+        foreach(v, context->scope)
         {
             if(i++ == t)
                 ret = v->variable;
@@ -74,33 +73,6 @@ inline size_t pointerDepth(Variable *var)
     }
 
     return n;
-}
-
-inline bool pointersInScope(VariableList *scope)
-{
-    VariableList *v;
-
-    foreach(v, scope)
-    {
-        if(v->variable->type == _pointer)
-            return true;
-    }
-
-    return false;
-}
-
-size_t numPointersInScope(VariableList *scope)
-{
-    size_t i = 0;
-    VariableList *v;
-
-    foreach(v, scope)
-    {
-        if(v->variable->type == _pointer)
-            ++i;
-    }
-
-    return i;
 }
 
 /* This function goes through all the pointers to find the type of the ultimately pointed integer ! */

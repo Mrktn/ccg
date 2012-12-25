@@ -65,7 +65,7 @@ void addStatementToList(Statement *statement, StatementList **list)
     }
 }
 
-#define IS_INVALID ((type == _ptrassignment && !(pointersInScope(context->scope)))\
+#define IS_INVALID ((type == _ptrassignment && (context->nvars == context->nintegers))\
                     || (type == _functioncall && program.numfunctions >= cmdline.max_functions)\
                     || (type == _return && (!nesting || !lastofblock))\
                     || (type == _goto && (cmdline.nojumps || (context->currfunc->numlabels == 0))))
@@ -97,7 +97,7 @@ static void buildIf(Statement *statement, Context *context, unsigned nesting)
 {
     IfStatement *ifstatement = xmalloc(sizeof(*ifstatement));
 
-    ifstatement->condition = makeExpression(context->scope, 0);
+    ifstatement->condition = makeExpression(context, 0);
     ifstatement->truepath = makeBlock(context, nesting + 1);
 
     /* An else branch is generated 30% of the time */
@@ -110,7 +110,7 @@ static void buildFor(Statement *statement, Context *context, unsigned nesting)
 {
     ForStatement *forstatement = xmalloc(sizeof(*forstatement));
 
-    forstatement->iterator = selectVariable(context->scope, _randomvartype);
+    forstatement->iterator = selectVariable(context, _randomvartype);
 
     /* The init var is in [-30;0[ u ]0;30] and the test val is in [30;89] */
     forstatement->init = (rand() % 30 + 1) * ((forstatement->iterator->type == _integer ? IS_UNSIGNED_INTEGERTYPE(forstatement->iterator->intvar.type) : IS_UNSIGNED_INTEGERTYPE(ultimateType(forstatement->iterator))) ? 1 : ((rand() % 2) ? -1 : 1));
@@ -134,7 +134,7 @@ static void buildFunctionCall(Statement *statement, Context *context, unsigned n
     funccallstatement->function = makeFunction(true);
 
     foreach(v, funccallstatement->function->paramlist)
-        addExpressionToList(makeExpression(context->scope, nesting + 1), (ExpressionList**) &funccallstatement->paramlist);
+        addExpressionToList(makeExpression(context, nesting + 1), (ExpressionList**) &funccallstatement->paramlist);
 
     statement->stmnt.funccallstatement = funccallstatement;
 }
@@ -143,9 +143,9 @@ static void buildAssignment(Statement *statement, Context *context, unsigned nes
 {
     AssignmentStatement *as = xmalloc(sizeof(*as));
 
-    as->var = selectVariable(context->scope, _randomvartype);
+    as->var = selectVariable(context, _randomvartype);
     as->op = rand() % _assignopmax /*_assign*/;
-    as->expr = makeExpression(context->scope, 0);
+    as->expr = makeExpression(context, 0);
 
     statement->stmnt.assignmentstatement = as;
 }
@@ -157,10 +157,10 @@ static void buildPtrAssignment(Statement *statement, Context *context, unsigned 
     Variable *v;
     PtrAssignmentStatement *pas = xmalloc(sizeof(*pas));
 
-    pas->lhs = selectVariable(context->scope, _pointer);
+    pas->lhs = selectVariable(context, _pointer);
 
     do
-        v = selectVariable(context->scope, _randomvartype);
+        v = selectVariable(context, _randomvartype);
     while(!PTRASSIGNMENT_IS_CONSISTENT(pas->lhs, v));
 
     pas->rhs = v;
@@ -172,7 +172,7 @@ static void buildReturn(Statement *statement, Context *context, unsigned nesting
 {
     ReturnStatement *rs = xmalloc(sizeof(*rs));
 
-    rs->retval = selectOperand(context->scope);
+    rs->retval = selectOperand(context);
 
     statement->stmnt.returnstatement = rs;
 }

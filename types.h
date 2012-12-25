@@ -251,7 +251,7 @@ typedef struct EL
 
 typedef struct Context
 {
-    unsigned nvars;
+    unsigned short nvars, nintegers;
     VariableList *scope;
     Function *currfunc;
 } Context;

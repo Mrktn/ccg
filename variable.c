@@ -43,7 +43,7 @@ void addVariableToList(Variable *variable, VariableList **list)
     }
 }
 
-Variable *makeVariable(VariableList *scope, VariableType type)
+Variable *makeVariable(Context *context, VariableType type)
 {
     Variable *ret = xmalloc(sizeof(Variable));
 
@@ -52,17 +52,17 @@ Variable *makeVariable(VariableList *scope, VariableType type)
         ret->type = type;
 
         if(type == _integer)
-            makeInteger(ret, scope);
+            makeInteger(ret, context);
         else
-            makePointer(ret, scope);
+            makePointer(ret, context);
     }
 
     else
     {
         if((ret->type = rand() % _vartypemax) == _integer)
-            makeInteger(ret, scope);
+            makeInteger(ret, context);
         else if(ret->type == _pointer)
-            makePointer(ret, scope);
+            makePointer(ret, context);
     }
 
     return ret;
@@ -97,28 +97,17 @@ void copyVariableList(VariableList *src, VariableList **dest)
         addVariableToList(v->variable, dest);
 }
 
-size_t numVariablesInScope(VariableList *scope)
-{
-    size_t i = 0;
-    VariableList *v;
-
-    foreach(v, scope) ++i;
-
-    return i;
-}
-
-/* Pick a variable from the `scope' which is of type `type' */
-Variable *selectVariable(VariableList *scope, VariableType type)
+Variable *selectVariable(Context *context, VariableType type)
 {
     VariableList *v;
     size_t n, t = 0;
 
     if(type == _randomvartype)
-        n = rand() % numVariablesInScope(scope);
+        n = rand() % context->nvars;
     else
-        n = rand() % (type == _integer ? numIntegersInScope(scope) : numPointersInScope(scope));
+        n = rand() % (type == _integer ? context->nintegers : (context->nvars - context->nintegers));
 
-    foreach(v, scope)
+    foreach(v, context->scope)
     {
         if(v->variable->type == type || type == _randomvartype)
             if(t++ == n)
@@ -132,9 +121,18 @@ Variable *selectVariable(VariableList *scope, VariableType type)
 void makeGlobalVariables(void)
 {
     size_t i;
+    Context *c = xmalloc(sizeof(*c));
+
+    c->scope = program.globalvars;
+    c->nvars = 0;
 
     program.numglobalvars = rand() % 10 + 1;
 
     for(i = 0; i < program.numglobalvars; ++i)
-        addVariableToList(makeVariable(program.globalvars, _integer), &program.globalvars);
+    {
+        addVariableToList(makeVariable(c, _integer), &program.globalvars);
+        c->nvars++;
+    }
+
+    free(c);
 }

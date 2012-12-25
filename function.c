@@ -72,7 +72,8 @@ Function *makeFunction(bool params)
     ret->name = makeFunctionName();
     ret->numlabels = 0;
 
-    numparams = params ? rand() % (cmdline.max_function_parameters + 1) : 0;
+    context->nvars = context->nintegers = program.numglobalvars;
+    numparams = (params ? rand() % (cmdline.max_function_parameters + 1) : 0);
 
     program.numfunctions++;
 
@@ -82,7 +83,12 @@ Function *makeFunction(bool params)
 
         for(i = 0; i < numparams; ++i)
         {
-            Variable *v = makeVariable(context->scope, _integer);
+            Variable *v = makeVariable(context, _integer);
+            context->nvars++;
+
+            if(v->type == _integer)
+                context->nintegers++;
+
             addVariableToList(v, &ret->paramlist);
             addVariableToList(v, &context->scope);
         }

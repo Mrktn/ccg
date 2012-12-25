@@ -23,14 +23,14 @@
 
 #include "ccg.h"
 
-Operand *selectOperand(VariableList *scope)
+Operand *selectOperand(Context *context)
 {
     Operand *operand = xmalloc(sizeof(*operand));
 
     operand->type = rand() % 3 == 0 ? _constant : _variable;
 
     if(operand->type == _variable)
-        operand->op.variable = selectVariable(scope, _randomvartype);
+        operand->op.variable = selectVariable(context, _randomvartype);
     else
         operand->op.constant = makeIntegerConstant(RANDOM_BITNESS);
 

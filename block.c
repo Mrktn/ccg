@@ -31,6 +31,8 @@ Block *makeBlock(Context *context, unsigned nesting)
 
     Context *bcontext = xmalloc(sizeof(*bcontext));
     bcontext->currfunc = context->currfunc;
+    bcontext->nvars = context->nvars;
+    bcontext->nintegers = context->nintegers;
 
     copyVariableList(context->scope, &bcontext->scope);
 
@@ -41,7 +43,12 @@ Block *makeBlock(Context *context, unsigned nesting)
 
     for(i = 0; i < numlocalvars; ++i)
     {
-        Variable *tmp = makeVariable(bcontext->scope, _randomvartype);
+        Variable *tmp = makeVariable(bcontext, _randomvartype);
+        bcontext->nvars++;
+
+        if(tmp->type == _integer)
+            bcontext->nintegers++;
+
         addVariableToList(tmp, &(ret->localvars));
         addVariableToList(tmp, &bcontext->scope);
     }
