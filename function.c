@@ -29,7 +29,7 @@ void addFunctionToList(Function *function, FunctionList **list)
 {
     if(!*list)
     {
-        *list = xmalloc(sizeof(*list));
+        *list = xmalloc(sizeof(**list));
         (*list)->function = function;
         (*list)->next = NULL;
     }
@@ -39,7 +39,7 @@ void addFunctionToList(Function *function, FunctionList **list)
         FunctionList *v;
 
         for(v = *list; v->next; v = v->next);
-        v->next = xmalloc(sizeof(v->next));
+        v->next = xmalloc(sizeof(*v->next));
         v->next->function = function;
         v->next->next = NULL;
     }
@@ -51,7 +51,7 @@ char *makeFunctionName(void)
     char buff[8];
 
     sprintf(buff, "%zu", program.numfunctions);
-    name = malloc(strlen(buff) + 1);
+    name = malloc(strlen(buff) + 6);
     sprintf(name, "func_%zu", program.numfunctions);
 
     return name;
@@ -71,6 +71,7 @@ Function *makeFunction(bool params)
     ret->returntype = rand() % _inttypemax;
     ret->name = makeFunctionName();
     ret->numlabels = 0;
+    ret->labels = NULL;
 
     context->nvars = context->nintegers = program.numglobalvars;
     numparams = (params ? rand() % (cmdline.max_function_parameters + 1) : 0);

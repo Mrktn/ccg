@@ -60,7 +60,7 @@ void addExpressionToList(Expression *expression, ExpressionList **list)
 {
     if(!*list)
     {
-        *list = xmalloc(sizeof(*list));
+        *list = xmalloc(sizeof(**list));
         (*list)->expression = expression;
         (*list)->next = NULL;
     }
@@ -70,7 +70,7 @@ void addExpressionToList(Expression *expression, ExpressionList **list)
         ExpressionList *e;
 
         for(e = *list; e->next; e = e->next);
-        e->next = xmalloc(sizeof(e->next));
+        e->next = xmalloc(sizeof(*e->next));
         e->next->expression = expression;
         e->next->next = NULL;
     }

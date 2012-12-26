@@ -49,7 +49,7 @@ void addStatementToList(Statement *statement, StatementList **list)
 {
     if(!*list)
     {
-        *list = xmalloc(sizeof(*list));
+        *list = xmalloc(sizeof(**list));
         (*list)->statement = statement;
         (*list)->next = NULL;
     }
@@ -59,7 +59,7 @@ void addStatementToList(Statement *statement, StatementList **list)
         StatementList *s;
 
         for(s = *list; s->next; s = s->next);
-        s->next = xmalloc(sizeof(s->next));
+        s->next = xmalloc(sizeof(*s->next));
         s->next->statement = statement;
         s->next->next = NULL;
     }

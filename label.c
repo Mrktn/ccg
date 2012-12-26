@@ -27,7 +27,7 @@ void addLabelToList(Label *label, LabelList **list)
 {
     if(!*list)
     {
-        *list = xmalloc(sizeof(*list));
+        *list = xmalloc(sizeof(**list));
         (*list)->label = label;
         (*list)->next = NULL;
     }
@@ -37,7 +37,7 @@ void addLabelToList(Label *label, LabelList **list)
         LabelList *v;
 
         for(v = *list; v->next; v = v->next);
-        v->next = xmalloc(sizeof(v->next));
+        v->next = xmalloc(sizeof(*v->next));
         v->next->label = label;
         v->next->next = NULL;
     }

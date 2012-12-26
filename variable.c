@@ -27,7 +27,7 @@ void addVariableToList(Variable *variable, VariableList **list)
 {
     if(!*list)
     {
-        *list = xmalloc(sizeof(*list));
+        *list = xmalloc(sizeof(**list));
         (*list)->variable = variable;
         (*list)->next = NULL;
     }
@@ -37,7 +37,7 @@ void addVariableToList(Variable *variable, VariableList **list)
         VariableList *v;
 
         for(v = *list; v->next; v = v->next);
-        v->next = xmalloc(sizeof(v->next));
+        v->next = xmalloc(sizeof(*v->next));
         v->next->variable = variable;
         v->next->next = NULL;
     }

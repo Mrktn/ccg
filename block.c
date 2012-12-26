@@ -33,6 +33,7 @@ Block *makeBlock(Context *context, unsigned nesting)
     bcontext->currfunc = context->currfunc;
     bcontext->nvars = context->nvars;
     bcontext->nintegers = context->nintegers;
+    bcontext->scope = NULL;
 
     copyVariableList(context->scope, &bcontext->scope);
 
