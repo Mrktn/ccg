@@ -44,20 +44,6 @@ void makeInteger(Variable *var, Context *context)
     var->name = makeIntegerName(var->intvar.type, context);
 }
 
-/*size_t numIntegersInScope(Context *context)
-{
-    size_t i = 0;
-    VariableList *v;
-
-    foreach(v, context->scope)
-    {
-        if(v->variable->type == _integer)
-            ++i;
-    }
-
-    return i;
-}*/
-
 void printIntegerDecl(Variable *var)
 {
     printf("%s %s = %s;\n", inttype2str[var->intvar.type], var->name, var->intvar.initializer->value);

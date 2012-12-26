@@ -43,6 +43,17 @@ void addVariableToList(Variable *variable, VariableList **list)
     }
 }
 
+void freeVariableList(VariableList *list)
+{
+    VariableList *v, *next;
+
+    for(v = list; v; v = next)
+    {
+        next = v->next;
+        free(v);
+    }
+}
+
 Variable *makeVariable(Context *context, VariableType type)
 {
     Variable *ret = xmalloc(sizeof(Variable));

@@ -28,8 +28,8 @@ Block *makeBlock(Context *context, unsigned nesting)
 {
     size_t i, numlocalvars, numstatements;
     Block *ret = xmalloc(sizeof(*ret));
-
     Context *bcontext = xmalloc(sizeof(*bcontext));
+
     bcontext->currfunc = context->currfunc;
     bcontext->nvars = context->nvars;
     bcontext->nintegers = context->nintegers;
@@ -39,7 +39,6 @@ Block *makeBlock(Context *context, unsigned nesting)
 
     ret->localvars = NULL, ret->statementlist = NULL;
 
-    /* 1st step: generate some random vars (at least 1 if we are in the body of a function */
     numlocalvars = rand() % cmdline.max_localvars + !nesting;
 
     for(i = 0; i < numlocalvars; ++i)
@@ -54,7 +53,6 @@ Block *makeBlock(Context *context, unsigned nesting)
         addVariableToList(tmp, &bcontext->scope);
     }
 
-    /* 2nd step: generate some random statements ! */
     if(nesting < cmdline.max_block_nesting)
     {
         numstatements = rand() % cmdline.max_statements_per_block;
@@ -66,6 +64,7 @@ Block *makeBlock(Context *context, unsigned nesting)
         }
     }
 
+    freeVariableList(bcontext->scope);
     free(bcontext);
 
     return ret;

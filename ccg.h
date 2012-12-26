@@ -88,6 +88,7 @@ void printConstant(Constant*);
 /* Variable */
 Variable *makeVariable(Context*, VariableType);
 void addVariableToList(Variable*, VariableList**);
+void freeVariableList(VariableList*);
 void printVariableDecl(Variable*);
 void printVariableType(Variable*);
 void copyVariableList(VariableList*, VariableList**);

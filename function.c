@@ -98,6 +98,10 @@ Function *makeFunction(bool params)
     ret->body = makeBlock(context, 0);
 
     addFunctionToList(ret, &program.functions);
+
+    if(params)
+        freeVariableList(context->scope);
+
     free(context);
 
     return ret;
