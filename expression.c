@@ -74,7 +74,6 @@ Expression *makeExpression(Context *context, unsigned nesting)
 {
     Expression *expression = xmalloc(sizeof(*expression));
 
-    /* If we want to put en end to the expression nesting, we have to put an operand, either a variable or a constant */
     if(nesting >= cmdline.max_expression_nesting)
         expression->type = _operandexpr;
     else
@@ -108,9 +107,8 @@ void buildTernary(Expression *expression, Context *context, unsigned nesting)
 {
     struct TernaryExpression *te = xmalloc(sizeof(*te));
 
-    /* Build the test part of the ternary */
     te->test = makeExpression(context, nesting + 1);
-    te->truepath = makeExpression(context, nesting + 1), te->falsepath = makeExpression(context, nesting + 1);
+    te->truepath = (rand() % 4) ? makeExpression(context, nesting + 1) : NULL, te->falsepath = makeExpression(context, nesting + 1);
     expression->expr.ternexpr = te;
 }
 
@@ -180,7 +178,10 @@ static void printTernary(struct TernaryExpression *te)
     putchar('(');
     printExpression(te->test);
     fputs(" ? ", stdout);
-    printExpression(te->truepath);
+
+    if(te->truepath)
+        printExpression(te->truepath);
+
     fputs(" : ", stdout);
     printExpression(te->falsepath);
     putchar(')');
