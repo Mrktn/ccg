@@ -37,7 +37,7 @@ typedef enum {_bwand, _bwor, _xor, _bitwiseopmax} BitwiseOp;
 typedef enum {_logand, _logor, _logicalopmax} LogicalOp;
 typedef enum {_arithmetic, _bitwise, _logical, _operationtypemax} OperationType;
 typedef enum {_operandexpr, _ternaryexpr, _operationexpr, _testexpr, _assignmentexpr, _functioncallexpr, _expressiontypemax} ExpressionType;
-typedef enum {_assigninc, _assigndec_, _assigndiv, _assignmul, _assign, _assignopmax} AssignmentOp;
+typedef enum {_assigninc, _assigndec_, _assigndiv, _assignmul, _assignand, _assignor, _assignxor, _assign, _assignopmax} AssignmentOp;
 
 typedef enum {_integer, _pointer, _vartypemax, _randomvartype = 42} VariableType;
 

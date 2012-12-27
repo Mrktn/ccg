@@ -29,7 +29,7 @@ char const * const testop2str[_testopmax] = {"==", "<=", ">=", "<", ">", "!="};
 char const * const arithop2str[_arithopmax] = {"+", "-", "/", "*"};
 char const * const bitwiseop2str[_bitwiseopmax] = {"&", "|", "^"};
 char const * const logicalop2str[_logicalopmax] = {"&&", "||"};
-char const * const assignop2str[_assignopmax] = {"+=", "-=", "/=", "*=", "="};
+char const * const assignop2str[_assignopmax] = {"+=", "-=", "/=", "*=", "&=", "|=", "^=", "="};
 
 void buildOperand(Expression*, Context*, unsigned);
 void buildTernary(Expression *expr, Context*, unsigned);
