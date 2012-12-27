@@ -23,14 +23,6 @@
 
 #include "ccg.h"
 
-/*
-    - Ternary: 10%
-    - Function call: 10%
-    - Operation: 20%
-    - Test: 20%
-    - Assignment: 20%
-    - Operand: 20%
-*/
 static const ExpressionType exprarray[10] = {_ternaryexpr, _functioncallexpr, _functioncallexpr, _operationexpr, _operationexpr, _operationexpr, _testexpr, _testexpr, _assignmentexpr, _assignmentexpr};
 
 char const * const testop2str[_testopmax] = {"==", "<=", ">=", "<", ">", "!="};
@@ -145,9 +137,7 @@ void buildAssignment(Expression *expression, Context *context, unsigned nesting)
 {
     struct AssignmentExpression *ae = xmalloc(sizeof(*ae));
 
-    if(!(ae->lvalue = selectVariable(context, _randomvartype)))
-        die("you kidding");
-
+    ae->lvalue = selectVariable(context, _randomvartype);
     ae->rvalue = makeExpression(context, nesting + 1);
     ae->op = rand() % _assignopmax;
 
