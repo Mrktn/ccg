@@ -32,12 +32,12 @@ typedef enum {_i8, _u8, _i16, _u16, _i32, _u32, _i64, _u64, _inttypemax} Integer
 typedef enum {_if, _for, _functioncall, _return, _assignment, _ptrassignment, _goto, _statementtypemax} StatementType;
 typedef enum {_variable, _constant, _operandtypemax, _none = 42} OperandType;
 typedef enum {_equal, _lowerorequal, _greaterorequal, _lower, greater, _different, _testopmax} TestOp;
-typedef enum {_plus, _minus, _div, _mul, _arithopmax} ArithOp;
+typedef enum {_plus, _minus, _div, _mod, _mul, _arithopmax} ArithOp;
 typedef enum {_bwand, _bwor, _xor, _bitwiseopmax} BitwiseOp;
 typedef enum {_logand, _logor, _logicalopmax} LogicalOp;
 typedef enum {_arithmetic, _bitwise, _logical, _operationtypemax} OperationType;
 typedef enum {_operandexpr, _ternaryexpr, _operationexpr, _testexpr, _assignmentexpr, _functioncallexpr, _expressiontypemax} ExpressionType;
-typedef enum {_assigninc, _assigndec_, _assigndiv, _assignmul, _assignand, _assignor, _assignxor, _assign, _assignopmax} AssignmentOp;
+typedef enum {_assigninc, _assigndec_, _assigndiv, _assignmod, _assignmul, _assignand, _assignor, _assignxor, _assign, _assignopmax} AssignmentOp;
 
 typedef enum {_integer, _pointer, _vartypemax, _randomvartype = 42} VariableType;
 
