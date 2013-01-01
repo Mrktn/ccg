@@ -44,7 +44,7 @@ GCC
  * (11/03/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55191 (fixed)
  * (11/11/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55270
  * (11/24/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55277 (fixed)
- * (12/31/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55831
+ * (12/31/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55831 (fixed)
  * (12/31/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55832
  * (12/31/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55833
  * (01/01/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55838
