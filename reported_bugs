@@ -25,8 +25,8 @@ Clang
  * (12/08/12) http://llvm.org/bugs/show_bug.cgi?id=14546
  * (12/08/12) http://llvm.org/bugs/show_bug.cgi?id=14547
  * (12/28/12) http://llvm.org/bugs/show_bug.cgi?id=14729 (fixed)
- * (12/28/12) http://llvm.org/bugs/show_bug.cgi?id=14732
- * (12/28/12) http://llvm.org/bugs/show_bug.cgi?id=14735
+ * (12/28/12) http://llvm.org/bugs/show_bug.cgi?id=14732 (fixed)
+ * (12/28/12) http://llvm.org/bugs/show_bug.cgi?id=14735 (fixed)
  * (12/29/12) http://llvm.org/bugs/show_bug.cgi?id=14742 (fixed)
  * (12/29/12) http://llvm.org/bugs/show_bug.cgi?id=14749
 
@@ -45,6 +45,6 @@ GCC
  * (11/11/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55270
  * (11/24/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55277 (fixed)
  * (12/31/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55831 (fixed)
- * (12/31/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55832
+ * (12/31/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55832 (fixed)
  * (12/31/12) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55833
- * (01/01/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55838
+ * (01/01/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55838 (fixed)
