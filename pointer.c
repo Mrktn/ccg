@@ -27,9 +27,11 @@
 
 static char *makePointerName(Context *context)
 {
-    char *ret = xmalloc(log10(context->nvars ? : 1) + 6);
+    char *ret, buff[16];
 
-    sprintf(ret, "ptr_%u", context->nvars);
+    sprintf(buff, "ptr_%u", context->nvars);
+    ret = xmalloc(strlen(buff) + 1);
+    strcpy(ret, buff);
 
     return ret;
 }
