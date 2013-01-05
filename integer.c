@@ -28,11 +28,9 @@ char const * const inttype2str[_inttypemax] = {"int8_t", "uint8_t", "int16_t", "
 
 static char *makeIntegerName(IntegerType type, Context *context)
 {
-    char buffer[32] = {0}, *ret;
+    char *ret = xmalloc(log10(context->nvars ? : 1) + strlen(inttype2varid[type]) + 3);
 
-    sprintf(buffer, "%s_%u", inttype2varid[type], context->nvars);
-    ret = xmalloc(strlen(buffer) + 1);
-    strcpy(ret, buffer);
+    sprintf(ret, "%s_%u", inttype2varid[type], context->nvars);
 
     return ret;
 }
