@@ -23,7 +23,7 @@ Clang
  * (11/06/12) http://llvm.org/bugs/show_bug.cgi?id=14271
  * (12/08/12) http://llvm.org/bugs/show_bug.cgi?id=14544
  * (12/08/12) http://llvm.org/bugs/show_bug.cgi?id=14546
- * (12/08/12) http://llvm.org/bugs/show_bug.cgi?id=14547
+ * (12/08/12) http://llvm.org/bugs/show_bug.cgi?id=14547 (fixed)
  * (12/28/12) http://llvm.org/bugs/show_bug.cgi?id=14729 (fixed)
  * (12/28/12) http://llvm.org/bugs/show_bug.cgi?id=14732 (fixed)
  * (12/28/12) http://llvm.org/bugs/show_bug.cgi?id=14735 (fixed)
