@@ -52,3 +52,5 @@ GCC
  * (01/03/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55862 (fixed)
  * (01/12/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55955 (fixed)
  * (01/13/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=55964 (fixed)
+ * (01/18/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56034
+ * (01/18/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56035 (fixed)
