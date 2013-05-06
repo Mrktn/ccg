@@ -69,4 +69,5 @@ GCC
  * (03/23/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56695 (fixed)
  * (03/27/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=56756 (fixed)
  * (04/26/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57081 (fixed)
- * (04/30/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57122
+ * (04/30/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57122 (fixed)
+ * (05/06/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57185
