@@ -76,7 +76,7 @@ GCC
  * (05/06/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57185 (fixed)
  * (05/11/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57251 (fixed)
  * (05/18/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57322 (fixed)
- * (05/24/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57400
+ * (05/24/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57400 (fixed)
  * (05/28/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57442 (fixed)
  * (06/01/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57497 (fixed)
  * (06/22/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57676
@@ -84,4 +84,4 @@ GCC
  * (07/26/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57993 (fixed)
  * (07/28/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58008
  * (07/28/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58010 (fixed)
- * (07/28/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58011
+ * (07/28/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58011 (fixed)
