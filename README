@@ -1,2 +1,4 @@
 CCG is the C Code Generator. It aims to produce chaotic and random C89 code in order to stress a bit compilers (just as csmith does).
 The generated code is not meant to be run (yet), so CCG can only be used to search for crashes, not miscompilations.
+
+UPDATE: compilers have now caught up with ccg (since it's been pretty hard to spot crashes last time I tried) so I may come up with a more robust approach in the future to generate more evil structures :-)
