@@ -1,4 +1,4 @@
-Clang
+LLVM/Clang
 
  * (05/18/12) http://llvm.org/bugs/show_bug.cgi?id=12868 (fixed)
  * (05/19/12) http://llvm.org/bugs/show_bug.cgi?id=12886
@@ -86,3 +86,8 @@ GCC
  * (07/28/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58010 (fixed)
  * (07/28/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58011 (fixed)
  * (12/07/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=59417 (fixed)
+ * (12/24/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=59592 (fixed)
+ * (07/20/15) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=66945 (fixed)
+ * (07/21/15) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=66958 (fixed)
+ * (07/25/15) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=67005
+ * (08/12/15) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=67191 (fixed)
