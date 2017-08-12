@@ -12,7 +12,7 @@ LLVM/Clang
  * (06/22/12) http://llvm.org/bugs/show_bug.cgi?id=13180 (fixed)
  * (06/23/12) http://llvm.org/bugs/show_bug.cgi?id=13185 (fixed)
  * (06/28/12) http://llvm.org/bugs/show_bug.cgi?id=13228 (fixed)
- * (06/30/12) http://llvm.org/bugs/show_bug.cgi?id=13244
+ * (06/30/12) http://llvm.org/bugs/show_bug.cgi?id=13244 (fixed)
  * (07/18/12) http://llvm.org/bugs/show_bug.cgi?id=13390 (fixed)
  * (07/19/12) http://llvm.org/bugs/show_bug.cgi?id=13402 (fixed)
  * (10/19/12) http://llvm.org/bugs/show_bug.cgi?id=14131 (fixed)
@@ -20,7 +20,7 @@ LLVM/Clang
  * (10/20/12) http://llvm.org/bugs/show_bug.cgi?id=14133 (fixed)
  * (10/27/12) http://llvm.org/bugs/show_bug.cgi?id=14197 (fixed)
  * (11/03/12) http://llvm.org/bugs/show_bug.cgi?id=14248 (fixed)
- * (11/06/12) http://llvm.org/bugs/show_bug.cgi?id=14271
+ * (11/06/12) http://llvm.org/bugs/show_bug.cgi?id=14271 (fixed)
  * (12/08/12) http://llvm.org/bugs/show_bug.cgi?id=14544 (fixed)
  * (12/08/12) http://llvm.org/bugs/show_bug.cgi?id=14546 (fixed)
  * (12/08/12) http://llvm.org/bugs/show_bug.cgi?id=14547 (fixed)
@@ -31,7 +31,7 @@ LLVM/Clang
  * (12/29/12) http://llvm.org/bugs/show_bug.cgi?id=14749 (fixed)
  * (01/20/13) http://llvm.org/bugs/show_bug.cgi?id=15008 (fixed)
  * (04/21/13) http://llvm.org/bugs/show_bug.cgi?id=15805 (fixed)
- * (04/26/13) http://llvm.org/bugs/show_bug.cgi?id=15851
+ * (04/26/13) http://llvm.org/bugs/show_bug.cgi?id=15851 (fixed)
  * (05/19/13) http://llvm.org/bugs/show_bug.cgi?id=16067
  * (07/15/13) http://llvm.org/bugs/show_bug.cgi?id=16628 (fixed)
 
@@ -79,15 +79,15 @@ GCC
  * (05/24/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57400 (fixed)
  * (05/28/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57442 (fixed)
  * (06/01/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57497 (fixed)
- * (06/22/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57676
+ * (06/22/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57676 (fixed)
  * (06/23/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57685 (fixed)
  * (07/26/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=57993 (fixed)
- * (07/28/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58008
+ * (07/28/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58008 (fixed)
  * (07/28/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58010 (fixed)
  * (07/28/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=58011 (fixed)
  * (12/07/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=59417 (fixed)
  * (12/24/13) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=59592 (fixed)
  * (07/20/15) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=66945 (fixed)
  * (07/21/15) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=66958 (fixed)
- * (07/25/15) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=67005
+ * (07/25/15) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=67005 (fixed)
  * (08/12/15) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=67191 (fixed)
