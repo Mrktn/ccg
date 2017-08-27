@@ -91,3 +91,4 @@ GCC
  * (07/21/15) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=66958 (fixed)
  * (07/25/15) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=67005 (fixed)
  * (08/12/15) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=67191 (fixed)
+ * (08/12/17) http://gcc.gnu.org/bugzilla/show_bug.cgi?id=81832 (fixed)
