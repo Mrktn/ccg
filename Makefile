@@ -1,5 +1,5 @@
 CC=clang
-
+cc=clang
 CFLAGS=-c -g -pipe -Wall -Wextra -std=c11
 LDFLAGS=-lm
 
