@@ -70,6 +70,7 @@ Function *makeFunction(bool params)
     ret->paramlist = NULL;
     ret->returntype = rand() % _inttypemax;
     ret->name = makeFunctionName();
+    ret->isStatic = (rand() % 10) == 0;
     ret->numlabels = 0;
     ret->labels = NULL;
 
@@ -111,6 +112,10 @@ void printFunctionPrototype(Function *function)
 {
     VariableList *v;
 
+    if (function->isStatic)
+    {
+        printf( "static ");
+    }
     printf("%s %s(", inttype2str[function->returntype], function->name);
 
     foreach(v, function->paramlist)

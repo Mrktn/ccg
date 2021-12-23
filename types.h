@@ -158,6 +158,7 @@ typedef struct
     Block *body;
     LabelList *labels;
     short numlabels;
+    bool isStatic;
 } Function;
 
 typedef struct
