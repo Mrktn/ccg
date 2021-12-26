@@ -113,11 +113,12 @@ static void buildFor(Statement *statement, Context *context, unsigned nesting)
     forstatement->iterator = selectVariable(context, _randomvartype);
 
     /* The init var is in [-30;0[ u ]0;30] and the test val is in [30;89] */
-    forstatement->init = (rand() % 30 + 1) * ((forstatement->iterator->type == _integer ? IS_UNSIGNED_INTEGERTYPE(forstatement->iterator->intvar.type) : IS_UNSIGNED_INTEGERTYPE(ultimateType(forstatement->iterator))) ? 1 : ((rand() % 2) ? -1 : 1));
-    forstatement->testval = (rand() % 60 + 30);
+    /* forstatement->init = (rand() % 30 + 1) * ((forstatement->iterator->type == _integer ? IS_UNSIGNED_INTEGERTYPE(forstatement->iterator->intvar.type) : IS_UNSIGNED_INTEGERTYPE(ultimateType(forstatement->iterator))) ? 1 : ((rand() % 2) ? -1 : 1)); */
+    forstatement->init = rand() % 100;
+    forstatement->testval = (rand() % 100) + 100;
 
     forstatement->testop = _lowerorequal;
-    forstatement->incval = 1;
+    forstatement->incval = (rand() % 5) + 1;
     forstatement->assignop = _assigninc;
 
     forstatement->body = makeBlock(context, nesting + 1);
@@ -139,7 +140,7 @@ static void buildFunctionCall(Statement *statement, Context *context, unsigned n
     statement->stmnt.funccallstatement = funccallstatement;
 }
 
-static void buildAssignment(Statement *statement, Context *context, unsigned nesting)
+static void buildAssignment(Statement *statement, Context *context, unsigned /* nesting */)
 {
     AssignmentStatement *as = xmalloc(sizeof(*as));
 
@@ -152,7 +153,7 @@ static void buildAssignment(Statement *statement, Context *context, unsigned nes
 
 #define PTRASSIGNMENT_IS_CONSISTENT(lhs, rhs) (INTEGERTYPE_SIZE(ultimateType(lhs)) <= INTEGERTYPE_SIZE(ultimateType(rhs)))
 
-static void buildPtrAssignment(Statement *statement, Context *context, unsigned nesting)
+static void buildPtrAssignment(Statement *statement, Context *context, unsigned /* nesting */)
 {
     Variable *v;
     PtrAssignmentStatement *pas = xmalloc(sizeof(*pas));
@@ -168,7 +169,7 @@ static void buildPtrAssignment(Statement *statement, Context *context, unsigned 
     statement->stmnt.ptrassignmentstatement = pas;
 }
 
-static void buildReturn(Statement *statement, Context *context, unsigned nesting)
+static void buildReturn(Statement *statement, Context *context, unsigned /* nesting */)
 {
     ReturnStatement *rs = xmalloc(sizeof(*rs));
 
@@ -177,7 +178,7 @@ static void buildReturn(Statement *statement, Context *context, unsigned nesting
     statement->stmnt.returnstatement = rs;
 }
 
-static void buildGoto(Statement *statement, Context *context, unsigned nesting)
+static void buildGoto(Statement *statement, Context *context, unsigned /* nesting */)
 {
     GotoStatement *gs = xmalloc(sizeof(*gs));
 

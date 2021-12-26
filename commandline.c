@@ -35,6 +35,7 @@ static void printHelp(void)
     puts("  --max-functions\t\tMax number of functions to be generated (default 12)");
     puts("  --max-localvars\t\tMax number of variables in a block (default 4)");
     puts("  --max-function-parameters\tMax number of parameters for a function (default 4)");
+    puts("  --min-statements-per-block\tMin number of statements in each block (default 2)");
     puts("  --max-statements-per-block\tMax number of statements in each block (default 7)");
     puts("  --max-expression-nesting\tControl the complexity of the expressions (default 8)");
     puts("  --max-block-nesting\t\tControl the nesting of the blocks (default 7)");
@@ -53,17 +54,25 @@ static void setopt(int index)
 {
     unsigned * const index2member[] =
     {
-        &cmdline.seed, &cmdline.max_functions, &cmdline.max_localvars, &cmdline.max_function_parameters,
-        &cmdline.max_statements_per_block, &cmdline.max_expression_nesting, &cmdline.max_block_nesting, &cmdline.max_pointer_depth
+        &cmdline.seed, 
+	&cmdline.max_functions, 
+	&cmdline.max_localvars, 
+	&cmdline.max_function_parameters,
+        &cmdline.min_statements_per_block, 
+
+        &cmdline.max_statements_per_block, 
+	&cmdline.max_expression_nesting, 
+	&cmdline.max_block_nesting, 
+	&cmdline.max_pointer_depth
     };
 
-    if(index >= 0 && index <= 7)
+    if(index >= 0 && index < 9)
         *(index2member[index]) = strtol(optarg, NULL, 10);
-    else if(index == 8)
-        cmdline.nojumps = true;
     else if(index == 9)
-        printHelp();
+        cmdline.nojumps = true;
     else if(index == 10)
+        printHelp();
+    else if(index == 11)
         printVersion();
 
     /* Sanity check */
@@ -81,6 +90,7 @@ void processCommandline(int argc, char **argv)
         {"max-functions", required_argument, NULL, 0},
         {"max-localvars", required_argument, NULL, 0},
         {"max-function-parameters", required_argument, NULL, 0},
+        {"min-statements-per-block", required_argument, NULL, 0},
         {"max-statements-per-block", required_argument, NULL, 0},
         {"max-expression-nesting", required_argument, NULL, 0},
         {"max-block-nesting", required_argument, NULL, 0},

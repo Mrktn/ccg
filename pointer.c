@@ -36,13 +36,7 @@ static char *makePointerName(Context *context)
     return ret;
 }
 
-void makePointer(Variable *var, Context *context)
-{
-    var->pointer.pointed = pickPointableVariable(context);
-    var->name = makePointerName(context);
-}
-
-Variable *pickPointableVariable(Context *context)
+static Variable *pickPointableVariable(Context *context)
 {
     VariableList *v;
     Variable *ret = NULL;
@@ -61,6 +55,13 @@ Variable *pickPointableVariable(Context *context)
 
     return ret;
 }
+
+void makePointer(Variable *var, Context *context)
+{
+    var->pointer.pointed = pickPointableVariable(context);
+    var->name = makePointerName(context);
+}
+
 
 inline size_t pointerDepth(Variable *var)
 {

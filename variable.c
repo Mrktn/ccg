@@ -137,7 +137,7 @@ void makeGlobalVariables(void)
     c->scope = program.globalvars;
     c->nvars = 0;
 
-    program.numglobalvars = rand() % 10 + 1;
+    program.numglobalvars = rand() % 11 + 1;
 
     for(i = 0; i < program.numglobalvars; ++i)
     {

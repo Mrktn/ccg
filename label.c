@@ -23,7 +23,7 @@
 
 #include "ccg.h"
 
-void addLabelToList(Label *label, LabelList **list)
+static void addLabelToList(Label *label, LabelList **list)
 {
     if(!*list)
     {

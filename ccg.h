@@ -98,7 +98,7 @@ IntegerType ultimateType(Variable*);
 
 /* Pointer */
 void makePointer(Variable*, Context*);
-Variable *pickPointableVariable(Context*);
+/* Variable *pickPointableVariable(Context*); */
 size_t pointerDepth(Variable*);
 char *maxDerefdPointer(Variable*);
 void printPointerDecl(Variable*);

@@ -55,7 +55,8 @@ Block *makeBlock(Context *context, unsigned nesting)
 
     if(nesting < cmdline.max_block_nesting)
     {
-        numstatements = rand() % cmdline.max_statements_per_block;
+        numstatements = cmdline.min_statements_per_block +
+		(rand() % (cmdline.max_statements_per_block - cmdline.min_statements_per_block));
 
         for(i = 0; i < numstatements; ++i)
         {

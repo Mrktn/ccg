@@ -33,17 +33,18 @@ typedef enum {_if, _for, _functioncall, _return, _assignment, _ptrassignment, _g
 typedef enum {_variable, _constant, _operandtypemax, _none = 42} OperandType;
 typedef enum {_equal, _lowerorequal, _greaterorequal, _lower, greater, _different, _testopmax} TestOp;
 typedef enum {_plus, _minus, _div, _mod, _mul, _arithopmax} ArithOp;
-typedef enum {_bwand, _bwor, _xor, _bitwiseopmax} BitwiseOp;
+typedef enum {_bwand, _bwor, _xor, _left, _right, _bitwiseopmax} BitwiseOp;
 typedef enum {_logand, _logor, _logicalopmax} LogicalOp;
 typedef enum {_arithmetic, _bitwise, _logical, _operationtypemax} OperationType;
 typedef enum {_operandexpr, _ternaryexpr, _operationexpr, _testexpr, _assignmentexpr, _functioncallexpr, _expressiontypemax} ExpressionType;
-typedef enum {_assigninc, _assigndec_, _assigndiv, _assignmod, _assignmul, _assignand, _assignor, _assignxor, _assign, _assignopmax} AssignmentOp;
+typedef enum {_assigninc, _assigndec_, _assigndiv, _assignmod, _assignmul, _assignand, _assignor, _assignxor, _assign, _leftshiftassign, _rightshiftassign, _assignopmax} AssignmentOp;
 
 typedef enum {_integer, _pointer, _vartypemax, _randomvartype = 42} VariableType;
 
 typedef uint8_t Permissions;
 
-#pragma pack(4)
+/* #pragma pack(4) */
+
 typedef struct
 {
     char *value;
@@ -266,7 +267,7 @@ typedef struct
 
 typedef struct
 {
-    unsigned seed, max_functions, max_localvars, max_function_parameters, max_statements_per_block,
+    unsigned seed, max_functions, max_localvars, max_function_parameters, min_statements_per_block, max_statements_per_block,
     max_expression_nesting, max_block_nesting, max_pointer_depth;
     bool nojumps;
 } CommandlineOpt;
