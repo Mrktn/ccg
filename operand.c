@@ -27,7 +27,7 @@ Operand *selectOperand(Context *context)
 {
     Operand *operand = xmalloc(sizeof(*operand));
 
-    operand->type = rand() % 3 == 0 ? _constant : _variable;
+    operand->type = (rand() % 3 == 0) ? _constant : _variable;
 
     if(operand->type == _variable)
         operand->op.variable = selectVariable(context, _randomvartype);

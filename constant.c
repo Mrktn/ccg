@@ -40,7 +40,7 @@ char *makeHexadecimalValue(unsigned digitNumber)
 Constant *makeIntegerConstant(unsigned bits)
 {
     Constant *ret = xmalloc(sizeof(*ret));
-    char *hexvalue = ((rand() % 3) ? makeHexadecimalValue(bits / 4) : "0"); /* 30% of the time, a zero is generated */
+    char *hexvalue = ((rand() % 4) ? makeHexadecimalValue(bits / 4) : "0"); /* 25 % of the time, a zero is generated */
 
     ret->value   = xcalloc(4 + strlen(hexvalue), 1);
     ret->bitness = bits;

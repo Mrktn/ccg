@@ -25,7 +25,7 @@
 
 Context context;
 
-void addFunctionToList(Function *function, FunctionList **list)
+static void addFunctionToList(Function *function, FunctionList **list)
 {
     if(!*list)
     {
@@ -45,7 +45,7 @@ void addFunctionToList(Function *function, FunctionList **list)
     }
 }
 
-char *makeFunctionName(void)
+static char *makeFunctionName(void)
 {
     char *name;
     char buff[8];

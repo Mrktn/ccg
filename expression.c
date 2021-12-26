@@ -27,16 +27,16 @@ static const ExpressionType exprarray[10] = {_ternaryexpr, _functioncallexpr, _f
 
 char const * const testop2str[_testopmax] = {"==", "<=", ">=", "<", ">", "!="};
 char const * const arithop2str[_arithopmax] = {"+", "-", "/", "%", "*"};
-char const * const bitwiseop2str[_bitwiseopmax] = {"&", "|", "^"};
+char const * const bitwiseop2str[_bitwiseopmax] = {"&", "|", "^", "<<", ">>"};
 char const * const logicalop2str[_logicalopmax] = {"&&", "||"};
-char const * const assignop2str[_assignopmax] = {"+=", "-=", "/=", "%=", "*=", "&=", "|=", "^=", "="};
+char const * const assignop2str[_assignopmax] = {"+=", "-=", "/=", "%=", "*=", "&=", "|=", "^=", "=", "<<=", ">>="};
 
-void buildOperand(Expression*, Context*, unsigned);
-void buildTernary(Expression *expr, Context*, unsigned);
-void buildOperation(Expression*, Context*, unsigned);
-void buildTest(Expression*, Context*, unsigned);
-void buildAssignment(Expression*, Context*, unsigned);
-void buildFunctionCall(Expression*, Context*, unsigned);
+static void buildOperand(Expression*, Context*, unsigned);
+static void buildTernary(Expression *expr, Context*, unsigned);
+static void buildOperation(Expression*, Context*, unsigned);
+static void buildTest(Expression*, Context*, unsigned);
+static void buildAssignment(Expression*, Context*, unsigned);
+static void buildFunctionCall(Expression*, Context*, unsigned);
 
 static void (*buildfunctions[_expressiontypemax])(Expression*, Context*, unsigned) =
 {
@@ -88,35 +88,38 @@ Expression *makeExpression(Context *context, unsigned nesting)
     return expression;
 }
 
-void buildOperand(Expression *expression, Context *context, unsigned nesting)
+static void buildOperand(Expression *expression, Context *context, unsigned /* nesting */)
 {
     expression->expr.operand = selectOperand(context);
 }
 
-void buildTest(Expression *expression, Context *context, unsigned nesting)
+static void buildTest(Expression *expression, Context *context, unsigned nesting)
 {
     struct TestExpression *te = xmalloc(sizeof(*te));
 
     te->op = rand() % _testopmax;
-    te->lefthand = makeExpression(context, nesting + 1), te->righthand = makeExpression(context, nesting + 1);
+    te->lefthand = makeExpression(context, nesting + 1);
+    te->righthand = makeExpression(context, nesting + 1);
 
     expression->expr.testexpr = te;
 }
 
-void buildTernary(Expression *expression, Context *context, unsigned nesting)
+static void buildTernary(Expression *expression, Context *context, unsigned nesting)
 {
     struct TernaryExpression *te = xmalloc(sizeof(*te));
 
     te->test = makeExpression(context, nesting + 1);
-    te->truepath = (rand() % 4) ? makeExpression(context, nesting + 1) : NULL, te->falsepath = makeExpression(context, nesting + 1);
+    te->truepath = (rand() % 5) ? makeExpression(context, nesting + 1) : NULL;
+    te->falsepath = makeExpression(context, nesting + 1);
     expression->expr.ternexpr = te;
 }
 
-void buildOperation(Expression *expression, Context *context, unsigned nesting)
+static void buildOperation(Expression *expression, Context *context, unsigned nesting)
 {
     struct OperationExpression *oe = xmalloc(sizeof(*oe));
 
-    oe->lefthand = makeExpression(context, nesting + 1), oe->righthand = makeExpression(context, nesting + 1);
+    oe->lefthand = makeExpression(context, nesting + 1);
+    oe->righthand = makeExpression(context, nesting + 1);
     oe->type = rand() % _operationtypemax;
 
     if(oe->type == _arithmetic)
@@ -131,7 +134,7 @@ void buildOperation(Expression *expression, Context *context, unsigned nesting)
 
 #define ASSIGNMENT_OP_IS_INVALID(oprtr, left, right) ((((left->type == _double || left->type == _float) || (IS_FLOATING_POINT_VARIABLE(right))) && (oprtr == _assignmod)))
 
-void buildAssignment(Expression *expression, Context *context, unsigned nesting)
+static void buildAssignment(Expression *expression, Context *context, unsigned nesting)
 {
     struct AssignmentExpression *ae = xmalloc(sizeof(*ae));
 
@@ -142,7 +145,7 @@ void buildAssignment(Expression *expression, Context *context, unsigned nesting)
     expression->expr.assignexpr= ae;
 }
 
-void buildFunctionCall(Expression *expression, Context *context, unsigned nesting)
+static void buildFunctionCall(Expression *expression, Context *context, unsigned nesting)
 {
     struct FunctionCallExpression *fce = xmalloc(sizeof(*fce));
     VariableList *v;
@@ -164,7 +167,7 @@ static void printOperand(Operand *op)
         printConstant(op->op.constant);
 }
 
-void printTest(struct TestExpression *te)
+static void printTest(struct TestExpression *te)
 {
     putchar('(');
     printExpression(te->lefthand);
@@ -191,7 +194,15 @@ static void printOperation(struct OperationExpression *oe)
 {
     putchar('(');
     printExpression(oe->lefthand);
-    printf(" %s ", oe->type == _arithmetic ? arithop2str[oe->operator.arithop] : (oe->type == _bitwise ? bitwiseop2str[oe->operator.bitwiseop] : logicalop2str[oe->operator.logicalop]));
+
+    switch (oe->type)
+    {
+        case _arithmetic: printf( " %s ", arithop2str[oe->operator.arithop]); break;
+        case _bitwise: printf( " %s ", bitwiseop2str[oe->operator.bitwiseop]); break;
+        case _logical: printf( " %s ", logicalop2str[oe->operator.logicalop]); break;
+        default: die("bad oe->type");
+    }
+
     printExpression(oe->righthand);
     putchar(')');
 }

@@ -49,10 +49,11 @@ static void init(void)
     program.numfunctions = program.numglobalvars = 0;
 
     /* Default settings */
-    cmdline.max_functions = 15;
-    cmdline.max_localvars = 4;
-    cmdline.max_function_parameters = 4;
-    cmdline.max_statements_per_block = 7;
+    cmdline.max_functions = 6;
+    cmdline.max_localvars = 5;
+    cmdline.max_function_parameters = 5;
+    cmdline.min_statements_per_block = 2;
+    cmdline.max_statements_per_block = 8;
     cmdline.max_expression_nesting = 8;
     cmdline.max_block_nesting = 7;
     cmdline.max_pointer_depth = 2;
