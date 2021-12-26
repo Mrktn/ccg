@@ -88,7 +88,7 @@ Expression *makeExpression(Context *context, unsigned nesting)
     return expression;
 }
 
-static void buildOperand(Expression *expression, Context *context, unsigned nesting)
+static void buildOperand(Expression *expression, Context *context, unsigned /* nesting */)
 {
     expression->expr.operand = selectOperand(context);
 }
