@@ -194,21 +194,15 @@ static void printOperation(struct OperationExpression *oe)
 {
     putchar('(');
     printExpression(oe->lefthand);
-#if 1
+
     switch (oe->type)
     {
-    case _arithmetic: printf( " %s ", arithop2str[oe->operator.arithop]); break;
-    case _bitwise: printf( " %s ", bitwiseop2str[oe->operator.bitwiseop]); break;
-    case _logical: printf( " %s ", logicalop2str[oe->operator.logicalop]); break;
-    default: die("bad oe->type");
+        case _arithmetic: printf( " %s ", arithop2str[oe->operator.arithop]); break;
+        case _bitwise: printf( " %s ", bitwiseop2str[oe->operator.bitwiseop]); break;
+        case _logical: printf( " %s ", logicalop2str[oe->operator.logicalop]); break;
+        default: die("bad oe->type");
     }
-#else
-    printf(" %s ", (oe->type == _arithmetic) 
-	? arithop2str[oe->operator.arithop] 
-	: ((oe->type == _bitwise) 
-		? bitwiseop2str[oe->operator.bitwiseop] 
-		: logicalop2str[oe->operator.logicalop]));
-#endif
+
     printExpression(oe->righthand);
     putchar(')');
 }
