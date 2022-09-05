@@ -68,11 +68,13 @@ static void setopt(int index)
 
     if(index >= 0 && index < 9)
         *(index2member[index]) = strtol(optarg, NULL, 10);
-    else if(index == 9)
-        cmdline.nojumps = true;
+    else if (index == 9)
+        cmdline.no_omitted_operand_conditional = true;
     else if(index == 10)
-        printHelp();
+        cmdline.nojumps = true;
     else if(index == 11)
+        printHelp();
+    else if(index == 12)
         printVersion();
 
     /* Sanity check */
@@ -95,6 +97,7 @@ void processCommandline(int argc, char **argv)
         {"max-expression-nesting", required_argument, NULL, 0},
         {"max-block-nesting", required_argument, NULL, 0},
         {"max-pointer-depth", required_argument, NULL, 0},
+	{"no-omitted-operand-conditional", no_argument, NULL, 0},
         {"no-jumps", no_argument, NULL, 0},
         {"help", no_argument, NULL, 0},
         {"version", no_argument, NULL, 0},
