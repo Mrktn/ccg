@@ -41,6 +41,7 @@ static void printHelp(void)
     puts("  --max-block-nesting\t\tControl the nesting of the blocks (default 7)");
     puts("  --max-pointer-depth\t\tMaximum depth of a pointer (default 2)");
     puts("  --no-jumps\t\t\tDisables jumps (enabled by default)");
+    puts("  --no-omitted-operand-conditional\tDisable x ? : z conditionals without second operand");
     exit(EXIT_SUCCESS);
 }
 
