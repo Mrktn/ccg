@@ -140,7 +140,7 @@ static void buildFunctionCall(Statement *statement, Context *context, unsigned n
     statement->stmnt.funccallstatement = funccallstatement;
 }
 
-static void buildAssignment(Statement *statement, Context *context, unsigned /* nesting */)
+static void buildAssignment(Statement *statement, Context *context, unsigned nesting)
 {
     AssignmentStatement *as = xmalloc(sizeof(*as));
 
@@ -153,7 +153,7 @@ static void buildAssignment(Statement *statement, Context *context, unsigned /* 
 
 #define PTRASSIGNMENT_IS_CONSISTENT(lhs, rhs) (INTEGERTYPE_SIZE(ultimateType(lhs)) <= INTEGERTYPE_SIZE(ultimateType(rhs)))
 
-static void buildPtrAssignment(Statement *statement, Context *context, unsigned /* nesting */)
+static void buildPtrAssignment(Statement *statement, Context *context, unsigned nesting)
 {
     Variable *v;
     PtrAssignmentStatement *pas = xmalloc(sizeof(*pas));
@@ -169,7 +169,7 @@ static void buildPtrAssignment(Statement *statement, Context *context, unsigned 
     statement->stmnt.ptrassignmentstatement = pas;
 }
 
-static void buildReturn(Statement *statement, Context *context, unsigned /* nesting */)
+static void buildReturn(Statement *statement, Context *context, unsigned nesting)
 {
     ReturnStatement *rs = xmalloc(sizeof(*rs));
 
@@ -178,7 +178,7 @@ static void buildReturn(Statement *statement, Context *context, unsigned /* nest
     statement->stmnt.returnstatement = rs;
 }
 
-static void buildGoto(Statement *statement, Context *context, unsigned /* nesting */)
+static void buildGoto(Statement *statement, Context *context, unsigned nesting)
 {
     GotoStatement *gs = xmalloc(sizeof(*gs));
 
