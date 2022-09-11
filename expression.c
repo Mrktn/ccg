@@ -109,7 +109,7 @@ static void buildTernary(Expression *expression, Context *context, unsigned nest
     struct TernaryExpression *te = xmalloc(sizeof(*te));
 
     te->test = makeExpression(context, nesting + 1);
-    te->truepath = (rand() % 5) ? makeExpression(context, nesting + 1) : NULL;
+    te->truepath = (cmdline.no_omitted_operand_conditional || rand() % 5) ? makeExpression(context, nesting + 1) : NULL;
     te->falsepath = makeExpression(context, nesting + 1);
     expression->expr.ternexpr = te;
 }
